@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bulle &amp; Bär">
+<meta name="theme-color" content="#131f24">
+<meta name="format-detection" content="telephone=no">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐂</text></svg>">
+<title>Bulle &amp; Bär 🐂 – Anlageprodukte &amp; Anlageberatung</title>
+<style>
+:root{
+  --bg:#131f24;--bg2:#1a2a31;--card:#202f36;--card2:#2a3b44;--line:#37464f;
+  --text:#f1f7fb;--muted:#9fb3bf;
+  --green:#58cc02;--green-d:#46a302;--blue:#1cb0f6;--blue-d:#1899d6;--red:#ff4b4b;--red-d:#d33131;
+  --gold:#ffc800;--gold-d:#cc9f00;--purple:#ce82ff;--purple-d:#a257d6;--orange:#ff9600;--orange-d:#cc7800;
+  --r:16px;
+  font-family:"Nunito","Trebuchet MS",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{-webkit-text-size-adjust:100%;background:var(--bg);}
+body{margin:0;background:var(--bg);color:var(--text);min-height:100vh;min-height:-webkit-fill-available;min-height:100dvh;overscroll-behavior-y:contain;font-size:16px;line-height:1.45;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);}
+button,.tile,.node,.chip,summary{touch-action:manipulation;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;}
+button{font-family:inherit;color:inherit;-webkit-appearance:none;appearance:none;}
+input,textarea,select{-webkit-appearance:none;appearance:none;font-size:16px;}
+input[type=range]{-webkit-appearance:auto;appearance:auto;}
+.run-body,.prodpick,.fb-e,.flash .f1,.flash .f2{-webkit-overflow-scrolling:touch;}
+h1,h2,h3,h4{margin:0 0 6px;}
+b,strong{color:#fff;}
+.muted{color:var(--muted);}
+.hidden{display:none!important;}
+
+/* HUD */
+#hud{position:sticky;top:0;z-index:40;background:rgba(19,31,36,.96);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:2px solid var(--line);padding:calc(8px + env(safe-area-inset-top)) 12px 8px;}
+.hud-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:8px;justify-content:space-between;}
+.chip{display:flex;align-items:center;gap:6px;font-weight:800;font-size:.95rem;padding:4px 8px;border-radius:12px;cursor:pointer;white-space:nowrap;}
+.chip.fire{color:var(--orange);}.chip.xp{color:var(--gold);}.chip.cd{color:var(--blue);}
+.ring{--p:0;width:34px;height:34px;border-radius:50%;background:conic-gradient(var(--green) calc(var(--p)*1%),var(--line) 0);display:grid;place-items:center;}
+.ring i{font-style:normal;width:26px;height:26px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:.8rem;}
+main{max-width:760px;margin:0 auto;padding:14px 14px calc(96px + env(safe-area-inset-bottom));}
+
+/* NAV */
+#nav{position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--bg);border-top:2px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);}
+#nav .in{display:flex;width:100%;max-width:760px;}
+#nav button{flex:1;background:none;border:none;padding:8px 2px 6px;font-size:.68rem;font-weight:800;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;text-transform:uppercase;letter-spacing:.3px;}
+#nav button span{font-size:1.45rem;filter:grayscale(.8);opacity:.8;}
+#nav button.on{color:var(--blue);}
+#nav button.on span{filter:none;opacity:1;transform:scale(1.1);}
+
+/* Buttons */
+.btn{border:none;border-radius:14px;padding:13px 18px;font-weight:900;font-size:1rem;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:transform .08s, box-shadow .08s;touch-action:manipulation;}
+.btn.green{background:var(--green);box-shadow:0 4px 0 var(--green-d);color:#0b2300;}
+.btn.blue{background:var(--blue);box-shadow:0 4px 0 var(--blue-d);color:#00263a;}
+.btn.red{background:var(--red);box-shadow:0 4px 0 var(--red-d);color:#3a0000;}
+.btn.gold{background:var(--gold);box-shadow:0 4px 0 var(--gold-d);color:#3a2d00;}
+.btn.purple{background:var(--purple);box-shadow:0 4px 0 var(--purple-d);color:#2a0046;}
+.btn.ghost{background:var(--card);box-shadow:0 4px 0 var(--line);color:var(--blue);border:2px solid var(--line);padding:11px 16px;}
+.btn:active:not(:disabled){transform:translateY(4px);box-shadow:0 0 0 transparent;}
+.btn:disabled{background:var(--card2);box-shadow:none;color:#6b7f8b;cursor:not-allowed;}
+.btn.full{width:100%;}
+.btn.sm{padding:8px 12px;font-size:.8rem;border-radius:10px;}
+
+/* Cards */
+.card{background:var(--card);border:2px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px;}
+.card h3{font-size:1.1rem;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.tile{background:var(--card);border:2px solid var(--line);border-bottom-width:5px;border-radius:var(--r);padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:4px;transition:transform .1s;text-align:left;}
+.tile:active{transform:translateY(3px);border-bottom-width:2px;margin-bottom:3px;}
+.tile .ic{font-size:2rem;}
+.tile h4{font-size:1.02rem;margin:0;}
+.tile p{margin:0;color:var(--muted);font-size:.85rem;}
+.tile .meta{font-size:.78rem;color:var(--gold);font-weight:800;margin-top:auto;padding-top:4px;}
+.hero{background:linear-gradient(135deg,#1d4d61,#17323d);border:2px solid #2c6c86;border-radius:var(--r);padding:16px;margin-bottom:14px;display:flex;gap:12px;align-items:center;}
+.hero .mascot{font-size:3rem;line-height:1;}
+.hero h2{font-size:1.2rem;}
+.bar{height:12px;background:var(--bg);border-radius:99px;overflow:hidden;border:2px solid var(--line);}
+.bar i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .4s;}
+.seg{display:flex;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:3px;margin-bottom:12px;gap:3px;}
+.seg button{flex:1;border:none;background:none;border-radius:10px;padding:9px 4px;font-weight:800;font-size:.85rem;color:var(--muted);cursor:pointer;}
+.seg button.on{background:var(--blue);color:#00263a;}
+h2.sec{margin:18px 0 8px;font-size:1.15rem;}
+
+/* PATH */
+.unit{margin-bottom:26px;}
+.unit-head{border-radius:var(--r);padding:14px;display:flex;align-items:center;gap:12px;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.35);}
+.unit-head .ic{font-size:2.2rem;}
+.unit-head h3{margin:0;font-size:1.1rem;}
+.unit-head p{margin:0;font-size:.82rem;opacity:.9;}
+.unit-head .sp{margin-left:auto;}
+.nodes{display:flex;flex-direction:column;align-items:center;gap:34px;padding:22px 0 8px;}
+.node{position:relative;width:78px;height:72px;border-radius:50%/48%;border:none;font-size:1.8rem;cursor:pointer;color:#fff;background:var(--c);box-shadow:0 7px 0 var(--cd);transition:transform .08s,box-shadow .08s;}
+.node:active{transform:translateY(6px);box-shadow:0 1px 0 var(--cd);}
+.node.done{background:var(--gold);box-shadow:0 7px 0 var(--gold-d);}
+.node.cur::after{content:"";position:absolute;inset:-9px;border:5px solid var(--c);border-radius:50%/48%;opacity:.5;animation:pulse 1.4s infinite;}
+.node .st{position:absolute;bottom:-17px;left:0;right:0;font-size:.75rem;letter-spacing:1px;}
+.node.boss{width:92px;height:84px;font-size:2.2rem;background:var(--purple);box-shadow:0 8px 0 var(--purple-d);}
+.node.boss.done{background:var(--gold);box-shadow:0 8px 0 var(--gold-d);}
+.start-bub{position:absolute;top:-34px;left:50%;transform:translateX(-50%);background:#fff;color:var(--c);font-weight:900;font-size:.8rem;padding:3px 10px;border-radius:10px;animation:bob 1s infinite alternate;white-space:nowrap;}
+.start-bub::after{content:"";position:absolute;bottom:-6px;left:50%;margin-left:-6px;border:6px solid transparent;border-top-color:#fff;border-bottom:0;}
+@keyframes pulse{from{transform:scale(1);opacity:.6}to{transform:scale(1.18);opacity:0}}
+@keyframes bob{from{transform:translate(-50%,0)}to{transform:translate(-50%,-4px)}}
+
+/* OVERLAY / RUNNER */
+#overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:60;display:flex;flex-direction:column;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);}
+.run-top{display:flex;align-items:center;gap:12px;padding:calc(12px + env(safe-area-inset-top)) 14px 8px;max-width:760px;width:100%;margin:0 auto;}
+.run-top .x{background:none;border:none;color:var(--muted);font-size:1.6rem;cursor:pointer;}
+.run-top .bar{flex:1;}
+.run-top .hearts{font-weight:900;color:var(--red);font-size:1.1rem;white-space:nowrap;}
+.run-top .tm{font-weight:900;color:var(--blue);min-width:48px;text-align:right;}
+.run-body{flex:1;overflow-y:auto;padding:8px 16px 20px;max-width:760px;width:100%;margin:0 auto;}
+.run-q{font-size:1.25rem;font-weight:800;margin:6px 0 16px;line-height:1.35;}
+.run-type{font-size:.75rem;color:var(--purple);text-transform:uppercase;letter-spacing:1px;font-weight:900;margin-bottom:2px;}
+.ctx{background:var(--card);border:2px dashed var(--line);border-radius:14px;padding:12px;margin-bottom:12px;font-size:.95rem;}
+.opt{display:block;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-bottom-width:5px;border-radius:14px;padding:13px 14px;margin-bottom:10px;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .06s;}
+.opt:active{transform:translateY(2px);}
+.opt.sel{border-color:var(--blue);background:#143a4d;color:#dff4ff;}
+.opt.ok{border-color:var(--green);background:#1f3d12;}
+.opt.bad{border-color:var(--red);background:#4a1b1b;}
+.opt.dim{opacity:.55;}
+.opt .k{display:inline-block;width:26px;height:26px;line-height:22px;text-align:center;border:2px solid var(--line);border-radius:8px;margin-right:10px;font-size:.8rem;color:var(--muted);}
+.tfrow{display:flex;gap:12px;}.tfrow .opt{text-align:center;font-size:1.15rem;padding:22px 8px;}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.pairs .opt{margin:0;padding:11px 10px;font-size:.92rem;}
+.pairs .p0{border-color:#1cb0f6}.pairs .p1{border-color:#ffc800}.pairs .p2{border-color:#ce82ff}.pairs .p3{border-color:#ff9600}.pairs .p4{border-color:#58cc02}.pairs .p5{border-color:#ff6b9d}
+.pairs .opt.tmp{border-color:#fff;background:#2a3b44;}
+.slot{min-height:54px;border:2px dashed var(--line);border-radius:14px;padding:8px;margin-bottom:12px;display:flex;flex-direction:column;gap:6px;}
+.slot .opt{margin:0;padding:9px 12px;font-size:.92rem;}
+.pool{display:flex;flex-wrap:wrap;gap:8px;}.pool .opt{width:auto;margin:0;padding:9px 12px;font-size:.92rem;}
+.numin{display:flex;align-items:center;gap:8px;}
+.numin input{flex:1;font-size:1.5rem;font-weight:800;padding:12px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:#fff;font-family:inherit;min-width:0;}
+.numin input:focus{outline:none;border-color:var(--blue);}
+.numin span{font-weight:800;color:var(--muted);}
+.run-foot{padding:12px 16px calc(14px + env(safe-area-inset-bottom));border-top:2px solid var(--line);}
+.run-foot .in{max-width:760px;margin:0 auto;}
+.run-foot.ok{background:#1b3a0e;border-color:#2d6a12;}
+.run-foot.bad{background:#411818;border-color:#7a2a2a;}
+.fb-t{font-size:1.15rem;font-weight:900;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.run-foot.ok .fb-t{color:var(--green);}.run-foot.bad .fb-t{color:var(--red);}
+.fb-e{font-size:.92rem;margin-bottom:10px;max-height:34vh;overflow-y:auto;}
+.fb-e .sol{background:rgba(0,0,0,.25);border-radius:10px;padding:8px 10px;margin-top:6px;font-size:.88rem;}
+
+/* Cards viewer */
+.lcard{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:18px;min-height:240px;}
+.lcard h3{font-size:1.3rem;color:var(--gold);}
+.lcard ul{padding-left:20px;margin:6px 0;}.lcard li{margin:4px 0;}
+.lcard table,.sheet table{border-collapse:collapse;width:100%;font-size:.88rem;margin:8px 0;}
+.lcard td,.lcard th,.sheet td,.sheet th{border:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top;}
+.lcard th,.sheet th{background:var(--card2);}
+.dots{display:flex;justify-content:center;gap:6px;margin:12px 0;}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line);}.dots i.on{background:var(--blue);}
+.tip{background:#2a2410;border-left:4px solid var(--gold);padding:8px 10px;border-radius:8px;margin:8px 0;font-size:.9rem;}
+.warn{background:#34171a;border-left:4px solid var(--red);padding:8px 10px;border-radius:8px;margin:8px 0;font-size:.9rem;}
+code,.f{font-family:ui-monospace,Menlo,Consolas,monospace;background:#0f191d;padding:1px 6px;border-radius:6px;font-size:.88em;color:#bde6ff;}
+
+/* Result */
+.res{text-align:center;padding-top:6vh;}
+.res .big{font-size:4.5rem;}
+.res h2{font-size:1.6rem;}
+.stars{font-size:2.4rem;letter-spacing:6px;margin:6px 0;}
+.stats{display:flex;gap:10px;justify-content:center;margin:16px 0;flex-wrap:wrap;}
+.stat{border:2px solid var(--line);border-radius:14px;padding:8px 14px;min-width:96px;}
+.stat b{display:block;font-size:1.3rem;}.stat small{color:var(--muted);font-weight:800;text-transform:uppercase;font-size:.65rem;}
+
+/* Flashcard */
+.flash{perspective:900px;height:300px;margin:10px 0 16px;cursor:pointer;}
+.flash .in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d;}
+.flash.flip .in{transform:rotateY(180deg);}
+.flash .f1,.flash .f2{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:20px;border:2px solid var(--line);padding:20px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow-y:auto;}
+.flash .f1{background:linear-gradient(135deg,#24424f,#1a2f38);font-size:1.5rem;font-weight:900;}
+.flash .f2{background:#2a2b4a;transform:rotateY(180deg);font-size:1.05rem;border-color:#5a5cab;}
+.flash small{color:var(--muted);font-weight:800;margin-top:12px;font-size:.75rem;}
+.boxes{display:flex;gap:6px;justify-content:center;margin-bottom:8px;}.boxes i{width:34px;height:8px;border-radius:5px;background:var(--line);}.boxes i.on{background:var(--green);}
+
+/* Studio */
+.studio svg{width:100%;height:auto;background:#0f191d;border:2px solid var(--line);border-radius:14px;display:block;}
+.stk{position:sticky;top:calc(56px + env(safe-area-inset-top));z-index:10;background:var(--bg);padding:4px 0 2px;}
+.stk .readout{margin:6px 0 4px;padding:8px 12px;}
+.stk .tip{margin:4px 0 0;padding:4px 8px;font-size:.82rem;}
+.sl{margin:10px 0;}.sl label{display:flex;justify-content:space-between;font-weight:800;font-size:.9rem;}
+.sl input[type=range]{width:100%;accent-color:var(--green);height:30px;}
+.prodpick{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px;}
+.prodpick button{flex:0 0 auto;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:8px 10px;font-weight:800;font-size:.82rem;cursor:pointer;white-space:nowrap;}
+.prodpick button.on{border-color:var(--green);background:#1f3d12;}
+.readout{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px;margin:10px 0;}
+.readout .r1{font-size:1.15rem;font-weight:900;}
+.pos{color:var(--green);}.neg{color:var(--red);}
+
+/* Misc */
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:10px;}
+.badge{text-align:center;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 6px;font-size:.72rem;}
+.badge .bi{font-size:2rem;display:block;}
+.badge.lock{opacity:.35;filter:grayscale(1);}
+details.sheet{background:var(--card);border:2px solid var(--line);border-radius:14px;margin-bottom:10px;}
+details.sheet summary{padding:12px;font-weight:900;cursor:pointer;list-style:none;}
+details.sheet .cnt{padding:0 14px 12px;}
+details.sheet h4{color:var(--gold);margin:10px 0 2px;}
+input.search,input.txt,select.txt{width:100%;padding:12px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:#fff;font-size:1rem;font-family:inherit;margin-bottom:10px;}
+.gl{padding:10px 0;border-bottom:1px solid var(--line);}.gl b{color:var(--gold);}
+#toast{position:fixed;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translate(-50%,-140%);z-index:100;background:#fff;color:#111;font-weight:900;padding:10px 18px;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.5);transition:transform .35s;max-width:92vw;text-align:center;}
+#toast.show{transform:translate(-50%,0);}
+#sheet{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;}
+#sheet .pane{background:var(--bg2);border-top:3px solid var(--line);border-radius:22px 22px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom));width:100%;max-width:760px;animation:up .25s;}
+@keyframes up{from{transform:translateY(60%);opacity:0}to{transform:none;opacity:1}}
+#confetti{position:fixed;inset:0;z-index:120;pointer-events:none;}
+.right{float:right;}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.mt{margin-top:12px;}
+.tag{display:inline-block;font-size:.7rem;font-weight:900;padding:2px 8px;border-radius:99px;background:var(--card2);color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+@media (max-width:420px){.chip{font-size:.85rem;padding:3px 5px;}.run-q{font-size:1.12rem;}}
+</style>
+</head>
+<body>
+<header id="hud"><div class="hud-in" id="hudin"></div></header>
+<main id="main"></main>
+<nav id="nav"><div class="in" id="navin"></div></nav>
+<div id="overlay" class="hidden"></div>
+<div id="sheet" class="hidden"></div>
+<div id="toast"></div>
+<canvas id="confetti"></canvas>
+<script>
+"use strict";
+/* ============ DATEN-HELFER ============ */
+const UNITS=[],FLASH=[],SCEN=[];
+// MC: erste Option ist die richtige (wird zur Laufzeit gemischt)
+const MC=(q,o,e)=>({t:'mc',q,o,e});
+const SC=(ctx,q,o,e)=>({t:'mc',ctx,q,o,e});
+const TF=(q,a,e)=>({t:'tf',q,a,e});
+const MS=(q,ok,bad,e)=>({t:'ms',q,ok,bad,e});
+const MA=(q,p,e)=>({t:'ma',q,p,e});
+const OR=(q,items,e)=>({t:'or',q,items,e});
+const NU=(q,a,tol,unit,e)=>({t:'nu',q,a,tol,unit,e});
+const card=(h,b)=>({h,b});
+const U=(o)=>UNITS.push(o);
+/* ============ UNIT 1 ============ */
+U({id:'u1',icon:'📜',title:'Wertpapiere & Finanzmärkte',sub:'Grundbegriffe · Kassa vs. Termin',lessons:[
+{t:'Das Wertpapier',cards:[
+card('Was ist ein Wertpapier?',`<ul><li>Eine <b>Urkunde</b>, in der ein <b>privates Vermögensrecht</b> verkörpert ist</li><li>Zur Geltendmachung des Rechts ist der <b>Besitz der Urkunde</b> erforderlich</li></ul><p><b>3 Funktionen:</b></p><ul><li><b>Legitimation</b> – der Besitzer gilt als berechtigt</li><li><b>Transport</b> (Übertragbarkeit) – Recht wird einfach übertragen</li><li><b>Publizität</b> – Recht wird nach außen sichtbar &amp; handelbar</li></ul>`),
+card('Klassifikation nach Übertragung',`<table><tr><th>Art</th><th>Übertragung</th><th>Beispiel</th></tr><tr><td><b>Inhaberpapier</b></td><td>Einigung + Übergabe</td><td>Inhaberanleihe (hohe Fungibilität)</td></tr><tr><td><b>Orderpapier</b></td><td>Indossament + Übergabe</td><td>Wechsel</td></tr><tr><td><b>Namenspapier</b> (Rektapapier)</td><td>Abtretung (Zession)</td><td>Namensschuldverschreibung</td></tr></table><p>Nach dem <b>verbrieften Recht</b>: Beteiligungspapiere (Aktie), Forderungspapiere (Anleihe), derivative Wertpapiere (Option, Zertifikat) – dazu Mischformen.</p>`),
+card('Vom Papier zum Bildschirm',`<ul><li><b>Globalurkunde</b>: eine Urkunde für viele Anleger</li><li><b>Girosammelverwahrung</b> über Zentralverwahrer</li><li><b>Elektronische Wertpapiere</b> (eWpG)</li></ul><div class="tip">Die Verkörperung tritt zurück – die <b>Funktion</b> bleibt bestehen.</div>`)],
+qs:[
+MC('Wie lautet die juristische Definition eines Wertpapiers?',['Urkunde, die ein privates Vermögensrecht verkörpert – zur Geltendmachung ist der Besitz der Urkunde erforderlich','Jedes an der Börse gehandelte Finanzprodukt','Ein Vertrag über Kauf oder Verkauf zu einem späteren Termin','Ein staatlich garantierter Zahlungsanspruch'],'Klassische Definition: Urkunde + privates Vermögensrecht + Recht „folgt“ dem Papier.'),
+MA('Ordne die Übertragungsart zu.',[['Inhaberpapier','Einigung + Übergabe'],['Orderpapier','Indossament + Übergabe'],['Namenspapier (Rekta)','Abtretung (Zession)']],'Inhaber: Einigung+Übergabe · Order: Indossament+Übergabe · Namenspapier: Zession.'),
+MS('Welche Funktionen erfüllt ein Wertpapier?',['Legitimationsfunktion','Transportfunktion','Publizitätsfunktion'],['Haftungsfunktion','Verzinsungsfunktion'],'Die drei Funktionen: Legitimation, Transport (Übertragbarkeit), Publizität.'),
+MC('Eine Inhaberanleihe ist …',['ein Inhaberpapier mit hoher Fungibilität','ein Orderpapier','ein Namenspapier','ein derivatives Wertpapier'],'Inhaberpapiere werden durch Einigung und Übergabe übertragen – sehr gut handelbar.'),
+TF('Heute ist für jedes Wertpapier eine physische Urkunde zwingend erforderlich.',false,'Globalurkunden, Girosammelverwahrung und elektronische Wertpapiere (eWpG) – die Verkörperung tritt zurück.'),
+MA('Ordne Wertpapierart und Beispiel zu.',[['Beteiligungspapier','Aktie'],['Forderungspapier','Anleihe'],['Derivatives Wertpapier','Zertifikat'],['Orderpapier','Wechsel']],'Aktie = Beteiligung, Anleihe = Forderung, Zertifikat/Option = derivativ, Wechsel = klassisches Orderpapier.')]},
+
+{t:'Finanzinstrument & Funktionen',cards:[
+card('Wertpapier ≠ Finanzinstrument',`<table><tr><th></th><th>Wertpapier</th><th>Finanzinstrument</th></tr><tr><td>Charakter</td><td>zivilrechtlich, <b>eng</b></td><td>aufsichtsrechtlich, <b>funktional, weit</b></td></tr><tr><td>Medium</td><td>Verkörperung eines Rechts</td><td>kein physisches Medium nötig</td></tr><tr><td>Handel</td><td>standardisiert, oft Börse</td><td>auch OTC &amp; individuell</td></tr><tr><td>Beispiel</td><td>Aktie</td><td>Option, Swap</td></tr></table><div class="tip"><b>Wertpapiere sind eine Teilmenge der Finanzinstrumente.</b> Regulierung (WpHG, MiFID II) knüpft an <b>Finanzinstrumente</b> an.</div>`),
+card('Finanzinstrumente nach § 2 WpHG',`<ul><li>Wertpapiere</li><li>Geldmarktinstrumente</li><li><b>Derivate</b></li><li>Anteile an Investmentvermögen</li><li>bestimmte sonstige Anlageformen</li></ul><div class="warn"><b>Zahlungsinstrumente</b> zählen <b>nicht</b> zu den Finanzinstrumenten.</div>`),
+card('Funktionen &amp; WpHG',`<p><b>Ökonomische Funktionen:</b> Kapitalallokation · Risikotransfer · Liquidität · Preisbildung</p><p><b>Das WpHG regelt u. a.:</b></p><ul><li>Beteiligungspublizität &amp; Meldepflichten</li><li>Verbot von Insidergeschäften</li><li>Verbot der Marktmanipulation</li><li>Pflicht zur anlage- und anlegergerechten Beratung</li><li>Einholung &amp; Dokumentation der Kundenangaben</li></ul>`)],
+qs:[
+TF('Wertpapiere sind eine Teilmenge der Finanzinstrumente.',true,'Finanzinstrument ist der weitere, aufsichtsrechtliche Oberbegriff.'),
+MC('Was gehört NICHT zu den Finanzinstrumenten nach § 2 WpHG?',['Zahlungsinstrumente','Derivate','Anteile an Investmentvermögen','Geldmarktinstrumente'],'Zahlungsinstrumente sind ausdrücklich ausgenommen.'),
+TF('Ein Swap ist ein Finanzinstrument, aber kein Wertpapier.',true,'Finanzinstrumente sind funktional definiert – kein Papier/keine Verbriefung nötig.'),
+MA('Ordne die ökonomische Funktion zu.',[['Kapitalallokation','Vermittlung zwischen Kapitalgebern und -nehmern'],['Risikotransfer','Verteilung von Risiken auf viele Investoren'],['Liquidität','Schneller Ein- und Ausstieg durch Handelbarkeit'],['Preisbildung','Märkte bestimmen laufend den Wert']],'Vier zentrale Funktionen von Wertpapieren im Finanzsystem.'),
+MS('Was regelt das WpHG?',['Verbot von Insidergeschäften','Verbot der Marktmanipulation','Pflicht zur anlegergerechten Anlageberatung'],['Höhe der Einkommensteuer auf Dividenden','Aufbau der Satzung einer AG'],'Insider, Manipulation, Meldepflichten, Beratungspflichten gehören ins WpHG.'),
+MC('Woran knüpft die Regulierung (WpHG/MiFID II) in der Regel an?',['Finanzinstrumente','Nur Aktien','Nur börsengehandelte Wertpapiere','Nur Bankeinlagen'],'Regulatorische Anforderungen beziehen sich i. d. R. nicht auf Wertpapiere, sondern auf Finanzinstrumente.')]},
+
+{t:'Kassa vs. Termin & Derivate',cards:[
+card('Kassamarkt vs. Terminmarkt',`<ul><li><b>Kassa:</b> sofortige Erfüllung – Lieferung &amp; Zahlung <b>2 Börsentage</b> nach Geschäftsabschluss (T+2)</li><li><b>Termin:</b> heute vereinbart, <b>später erfüllt</b></li></ul><p>Kassa-Segmente: <b>Einheitsmarkt</b> (ein Kurs pro Tag) · <b>variabler Markt</b> (fortlaufend)</p><p>Termin-Segmente: <b>Eurex</b> (Optionen/Futures) · <b>EUWAX Stuttgart</b> (Optionsscheine, Zertifikate, Hebelprodukte) · OTC</p>`),
+card('Derivate – Systematik',`<ul><li><b>Unbedingte</b> Termingeschäfte (feste Verpflichtung): Future (Börse), Forward (OTC), Swap (OTC)</li><li><b>Bedingte</b> Termingeschäfte: Optionen (Wahlrecht)</li></ul><p>Basiswerte: Aktien/Indizes, Devisen, Zinsen/Anleihen, Rohstoffe, Wetter …</p><p><b>Motive:</b> Hedging (Absicherung) · Spekulation · Arbitrage</p><div class="tip">Derivat = „abgeleitetes“ Instrument (<code>§ 2 Abs. 2 WpHG</code>). Aktie/Anleihe = originär.</div>`)],
+qs:[
+NU('Innerhalb wie vieler Börsentage nach Geschäftsabschluss wird ein Kassageschäft üblicherweise erfüllt?',2,0,'Börsentage','Erfüllungsvaluta immer 2 Börsentage nach Schlusstag (T+2).'),
+MA('Ordne zu.',[['Future','Börsengehandelt & standardisiert'],['Forward','Individuell vereinbart (OTC)'],['Option','Wahlrecht für eine Partei'],['Swap','Austausch von Zahlungsströmen']],'Future/Forward/Swap = unbedingt, Option = bedingt.'),
+MS('Welche Motive für Termingeschäfte gibt es?',['Hedging (Absicherung)','Spekulation','Arbitrage'],['Gewinnthesaurierung','Dividendenmaximierung'],'Die klassischen drei Motive: Hedging, Spekulation, Arbitrage.'),
+TF('Derivate gehören zu den originären Instrumenten.',false,'Derivate sind abgeleitet („derivativ“) von einem Basiswert.'),
+MC('Wo werden Optionsscheine und Zertifikate typischerweise börslich gehandelt?',['EUWAX (Börse Stuttgart)','Eurex','Xetra-Parkett Frankfurt','Nur an der NYSE'],'EUWAX = European Warrant Exchange in Stuttgart. Die Eurex handelt Optionen & Futures (Kontrakte).'),
+MC('Was ist ein Future?',['Unbedingtes Termingeschäft mit fester Verpflichtung zu Kauf/Verkauf zu einem festgelegten Terminpreis','Recht, aber keine Pflicht zum Kauf','Eine Anleihe ohne Kupon','Ein Zertifikat mit Kapitalschutz'],'Beide Seiten sind verpflichtet (long = Kauf, short = Verkauf) – Termin, Menge, Gut und Preis stehen fest.')]}
+]});
+
+/* ============ UNIT 2 ============ */
+U({id:'u2',icon:'🏦',title:'Börse & Handel',sub:'Handelsplätze · Market Maker · Eurex',lessons:[
+{t:'Handelsplätze & Zeiten',cards:[
+card('Handelszeiten (MEZ/MESZ)',`<table><tr><th>Börse</th><th>Zeit</th></tr><tr><td>Xetra</td><td>09:00 – 17:30</td></tr><tr><td>Frankfurt, Stuttgart, Hamburg, Hannover, München, gettex, Tradegate</td><td>08:00 – 22:00</td></tr><tr><td>Düsseldorf, Berlin</td><td>08:00 – 20:00</td></tr><tr><td>Lang &amp; Schwarz</td><td>07:30 – 23:00</td></tr><tr><td>London / Paris</td><td>09:00 – 17:30 / 17:35</td></tr><tr><td>New York (NYSE)</td><td>15:30 – 22:00</td></tr><tr><td>Shanghai</td><td>02:30 – 08:00</td></tr></table><p>München &amp; gettex: Anleihen nur bis 20 Uhr.</p>`),
+card('Anlage- &amp; Hebelprodukte in D',`<ul><li>Börslicher Handel <b>8–20 Uhr</b> – Stuttgart, Frankfurt, Berlin bis <b>22 Uhr</b></li><li>Außerbörslich <b>8–23 Uhr</b> direkt mit Emittent / Broker</li><li>&gt; 40.000 Titel, täglich bis zu <b>700 neue Produkte</b></li></ul><p><b>Börsen-ABC:</b> IPO = Börsengang · Blue Chips = Standardwerte · <b>bullish</b> = steigende Kurse · <b>bearish</b> = fallende Kurse · DAX = Index der 40 größten deutschen Werte</p>`)],
+qs:[
+MA('Ordne Börse und Handelszeit zu.',[['Xetra','09:00 – 17:30'],['Frankfurt','08:00 – 22:00'],['Düsseldorf','08:00 – 20:00'],['Lang & Schwarz','07:30 – 23:00']],'Xetra ist der kürzeste, L&S der längste Handel.'),
+MC('Welcher Handelsplatz startet schon um 7:30 Uhr?',['Lang & Schwarz','Xetra','Düsseldorf','Hannover'],'Lang & Schwarz: 07:30–23:00 Uhr.'),
+MC('Wann läuft der Xetra-Handel?',['09:00 – 17:30 Uhr','08:00 – 22:00 Uhr','07:30 – 23:00 Uhr','09:00 – 20:00 Uhr'],'Xetra: 9:00–17:30 Uhr.'),
+MC('„Bullish“ bedeutet …',['steigende Kurse (erwartet/herrschend)','fallende Kurse','Seitwärtsbewegung','Handelsaussetzung'],'Der Bulle stößt nach oben, der Bär schlägt nach unten (bearish).'),
+TF('Außerbörslicher Handel direkt mit dem Emittenten ist in Deutschland bis 23 Uhr möglich.',true,'Außerbörslich 8–23 Uhr; börslich i. d. R. 8–20 (Stuttgart/Frankfurt/Berlin bis 22).'),
+MC('Was ist ein IPO?',['Börsengang (Initial Public Offering)','Eine Zinsswap-Variante','Ein Zertifikat mit Barriere','Die Aufnahme in den DAX'],'IPO = erstmalige Platzierung von Aktien an der Börse.')]},
+
+{t:'Market Maker & Marktmodelle',cards:[
+card('Wer stellt Liquidität?',`<table><tr><th>Begriff</th><th>Wo / Was</th></tr><tr><td><b>Skontroführer</b></td><td>seit 1.7.2002 (früher: amtliche Kursmakler), von der Börsengeschäftsführung bestellt</td></tr><tr><td><b>Spezialisten</b></td><td>Skontroführer an der Präsenzbörse <b>Frankfurt</b></td></tr><tr><td><b>Designated Sponsors</b> (Betreuer)</td><td>in <b>Xetra</b> – verbindliche Geld-/Briefkurse, dafür Vergünstigungen bei Abwicklungsgebühren</td></tr><tr><td><b>QLP</b> (Quality Liquidity Provider)</td><td><b>Euwax Stuttgart</b>, seit 2007 im Derivatebereich</td></tr><tr><td><b>Freie Makler</b></td><td>Preisermittlung im geregelten Markt &amp; Freiverkehr</td></tr></table><p>Makler stellen <b>verbindliche Geld- und Briefkurse</b>. Orders können <b>tages-, ultimo-</b> oder bis zu einem <b>bestimmten Tag</b> gültig sein.</p>`)],
+qs:[
+MA('Ordne zu.',[['Spezialist','Frankfurter Präsenzbörse'],['Designated Sponsor','Xetra'],['QLP','Euwax Stuttgart (Derivate)'],['Skontroführer','früher amtlicher Kursmakler']],'Merke die vier Begriffe mit ihrem Handelsplatz.'),
+MC('Wofür erhalten Designated Sponsors Vergünstigungen bei den Abwicklungsgebühren?',['Für die Bereitschaft zu verbindlichen Geld- und Briefkursen','Für hohe Dividenden','Für die Börsenaufsicht','Für Neuemissionen'],'Sie stellen Liquidität in den ihnen zugeordneten Papieren.'),
+TF('Der Skontroführer hieß früher „(amtlicher) Kursmakler“.',true,'Seit 01.07.2002 heißen sie Skontroführer.'),
+MC('Was stellen Market Maker?',['Verbindliche Geld- und Briefkurse','Nur Briefkurse','Kreditlinien','Rating-Urteile'],'Dadurch ist ein Papier jederzeit handelbar.'),
+MC('Wer ermittelt Preise im geregelten Markt und im Freiverkehr?',['Freie Makler','Die BaFin','Die Eurex','Die EZB'],'Freie Makler haben eine zu den Skontroführern identische Funktion.'),
+MC('Die Börse Stuttgart / Euwax nutzt im Derivatehandel …',['Quality Liquidity Provider (QLP)','Designated Sponsors','Amtliche Kursmakler','Spezialisten'],'QLP seit 2007 im Marktmodell der Börse Stuttgart / Euwax.')]},
+
+{t:'Kurse, Orders & Eurex',cards:[
+card('Kursarten',`<ul><li><b>Variabler Kurs</b>: fortlaufender Handel</li><li><b>Einheitskurs</b>: Papiere, die nur einmal täglich gehandelt werden</li></ul><p><b>Bedingungen des Einheitskurses:</b></p><ul><li>größtmöglicher Umsatz</li><li>alle Bestens-/Billigst-Aufträge werden ausgeführt</li><li>alle über dem Kurs limitierten Käufe &amp; unter dem Kurs limitierten Verkäufe werden ausgeführt</li><li>zum Kurs limitierte Orders wenigstens teilweise</li></ul>`),
+card('Eurex',`<ul><li>Gehandelt werden <b>Kontrakte</b> (keine Wertpapiere): Optionen &amp; Futures auf Aktien, Indizes, Zinsen</li><li><b>Standardisiert</b>: Basiswert, Basispreis, Verfall, Kontraktgröße; Laufzeit <b>1–84 Monate</b></li><li>Reiner <b>Computerhandel</b> – keine Präsenzbörse</li><li><b>Market Maker</b> stellen auf Anfrage verbindliche Kurse</li><li><b>Clearing-Stelle (CCP)</b> tritt als Vertragspartner jeder Seite auf</li><li><b>Margin</b> (Sicherheitsleistung) für Stillhalter und Future-Positionen</li></ul>`)],
+qs:[
+MC('Welche Bedingung muss der Einheitskurs erfüllen?',['Es muss der größtmögliche Umsatz zustande kommen','Er muss dem Vortageskurs entsprechen','Er wird vom Emittenten bestimmt','Nur Limitorders werden ausgeführt'],'Umsatzmaximierung ist die zentrale Bedingung.'),
+TF('Die Eurex ist eine klassische Präsenzbörse.',false,'Die Eurex ist ein reiner Computerhandel.'),
+MC('Was wird an der Eurex gehandelt?',['Standardisierte Kontrakte (Optionen & Futures)','Aktien','Anleihen','Investmentfonds'],'Keine Wertpapiere, sondern Kontrakte.'),
+MC('Wer tritt an der Eurex als Vertragspartner jeder (anonymen) Seite auf?',['Die Clearing-Stelle (Central Counter Party)','Die BaFin','Der Emittent','Die Hausbank'],'Die CCP eliminiert das Kontrahentenrisiko.'),
+NU('Bis zu wie vielen Monaten Laufzeit gibt es Eurex-Kontrakte?',84,0,'Monate','Laufzeiten von 1 bis 84 Monaten.'),
+MS('Wer muss an der Eurex eine Margin stellen?',['Stillhalter einer Call-Option','Stillhalter einer Put-Option','Käufer eines Futures','Verkäufer eines Futures'],['Käufer einer Call-Option','Käufer einer Put-Option'],'Optionskäufer zahlen die Prämie und haben ein Recht (kein Margin); Stillhalter und Future-Parteien haben Pflichten.')]}
+]});
+
+/* ============ UNIT 3 ============ */
+U({id:'u3',icon:'📈',title:'Aktien',sub:'Arten · Kapitalerhöhung · Emission · Bewertung',lessons:[
+{t:'Aktienarten & Rechte',cards:[
+card('Wesen &amp; Arten',`<p>Aktie = <b>Miteigentumsanteil am Grundkapital</b> einer AG (AktG), verbrieft <b>Mitgliedschafts- &amp; Vermögensrechte</b>.</p><table><tr><th>Zerlegung</th><th>Merkmal</th></tr><tr><td><b>Nennwertaktie</b></td><td>mind. 1 €, volle Euro, nicht unter Nennwert ausgebbar</td></tr><tr><td><b>Stückaktie</b></td><td>alle gleicher Anteil am Grundkapital, „unechte nennwertlose“ (rechnerischer Nennwert)</td></tr><tr><td><b>Quotenaktie</b></td><td>„echte nennwertlose“ – in D nicht zugelassen (USA/Kanada)</td></tr></table>`),
+card('Übertragbarkeit &amp; Rechte',`<ul><li><b>Inhaberaktie:</b> Einigung + Übergabe</li><li><b>Namensaktie:</b> Einigung + Indossament + Übergabe, Eintrag im <b>Aktienregister</b></li><li><b>Vinkulierte Namensaktie:</b> zusätzlich Zustimmung der Gesellschaft</li></ul><p><b>Stammaktie:</b> Teilnahme- &amp; <b>Stimmrecht</b> in der HV, Dividende, Auskunft, Anfechtung, Antragsrecht, Liquidationserlös.</p><p><b>Vorzugsaktie:</b> meist <b>ohne Stimmrecht</b>, dafür Vorzug (Überdividende, prioritätisch, limitiert, <b>kumulativ</b> = Nachzahlung, Liquidationsvorzug).</p><p><b>Alte / junge Aktien:</b> junge = bei Kapitalerhöhung neu ausgegeben.</p>`)],
+qs:[
+MC('Was sind Quotenaktien?',['Echte nennwertlose Aktien – in Deutschland nicht zugelassen','Aktien mit Stimmrechtsvorzug','Aktien ohne Dividendenanspruch','Aktien mit Mindestnennwert 5 €'],'Quotenaktien verbriefen eine Quote am Reinvermögen, vor allem USA/Kanada.'),
+MA('Ordne Aktienart und Merkmal zu.',[['Stückaktie','Gleicher Anteil am Grundkapital – unechte nennwertlose Aktie'],['Nennwertaktie','Mind. 1 €, volle Euro'],['Namensaktie','Eintrag im Aktienregister'],['Vinkulierte Namensaktie','Übertragung nur mit Zustimmung der Gesellschaft']],'Vinkulierung schützt vor unerwünschten Aktionären.'),
+TF('Inhaberaktien werden durch Einigung und Übergabe übertragen.',true,'Daher gut für den Börsenhandel geeignet.'),
+MS('Welche Rechte hat ein Stammaktionär?',['Stimmrecht in der Hauptversammlung','Dividendenrecht','Auskunftsrecht in der HV','Anteil am Liquidationserlös'],['Garantierte Mindestverzinsung','Rückzahlung zum Nennwert nach Laufzeitende'],'Aktionäre sind Eigentümer – keine Gläubiger mit Rückzahlungsanspruch.'),
+MC('Typisches Merkmal einer Vorzugsaktie:',['Meist kein Stimmrecht, dafür Dividendenvorzug','Doppeltes Stimmrecht','Feste Laufzeit','Garantiertes Kapital'],'Kumulativ: ausgefallene Dividende wird nachgezahlt.'),
+MC('Was sind „junge Aktien“?',['Bei einer Kapitalerhöhung neu ausgegebene Aktien','Aktien von Start-ups','Aktien mit Stimmrechtsvorzug','Aktien aus dem Gratisbestand der Bank'],'Gegenstück: alte Aktien.')]},
+
+{t:'Kapitalerhöhung',cards:[
+card('Die 4 Formen',`<table><tr><th>Form</th><th>AktG</th><th>Kern</th></tr><tr><td><b>gegen Einlagen</b></td><td>§§ 182–191</td><td>neue Aktien gegen Geld; <b>Bezugsrecht</b> der Altaktionäre</td></tr><tr><td><b>bedingte</b></td><td>§§ 192–201</td><td>nur für WSV/Umtauschrechte, Unternehmenszusammenschlüsse, Mitarbeiteroptionen; max. <b>50 %</b> des GK; 75 %-HV</td></tr><tr><td><b>genehmigtes Kapital</b></td><td>§§ 202–206</td><td>Vorstand ermächtigt; <b>5 Jahre</b>; max. <b>50 %</b> des GK; 75 %-HV</td></tr><tr><td><b>aus Gesellschaftsmitteln</b></td><td>§§ 207–220</td><td>Rücklagen → Grundkapital (<b>Passivtausch</b>), Gratis-/Berichtigungsaktien</td></tr></table>`),
+card('Bezugsrecht',`<ul><li>Bezugskurs ≥ Nennwert (Agio → Kapitalrücklage)</li><li>Altaktionäre erhalten <b>gesetzliches Bezugsrecht</b> – sie wahren Quote, Stimmrechtsanteil, Vermögen</li><li>Bezugsrecht ist in der Bezugsfrist <b>separat handelbar</b></li><li>Ausschluss mit <b>75 %</b>-Mehrheit, insb. wenn Kapitalerhöhung ≤ 10 % des GK <b>und</b> Ausgabekurs nicht wesentlich unter Börsenkurs (§ 186 Abs. 3)</li></ul>`)],
+qs:[
+MA('Ordne Form und Paragraphen zu.',[['Kapitalerhöhung gegen Einlagen','§§ 182–191 AktG'],['Bedingte Kapitalerhöhung','§§ 192–201 AktG'],['Genehmigtes Kapital','§§ 202–206 AktG'],['Aus Gesellschaftsmitteln','§§ 207–220 AktG']],'Reihenfolge im AktG: 182 → 192 → 202 → 207.'),
+MC('Mit welcher Mehrheit kann die HV das Bezugsrecht ausschließen?',['75 %','50 %','25 %','Einstimmig'],'Qualifizierte Mehrheit von 75 %.'),
+MS('Für welche Zwecke ist die bedingte Kapitalerhöhung vorgesehen?',['Umtausch-/Bezugsrechte bei Wandelschuldverschreibungen','Vorbereitung von Unternehmenszusammenschlüssen','Bezugsrechte für Arbeitnehmer und Führungskräfte'],['Auszahlung einer Sonderdividende','Rückkauf eigener Aktien'],'Nur diese drei Fälle sind zulässig.'),
+NU('Wie hoch darf das bedingte Kapital maximal sein (in % des Grundkapitals)?',50,0,'%','Auch beim genehmigten Kapital gilt: max. 50 % des Grundkapitals.'),
+NU('Innerhalb wie vieler Jahre muss beim genehmigten Kapital die Kapitalerhöhung erfolgen?',5,0,'Jahre','Zeitrestriktion: 5 Jahre.'),
+MC('Die Kapitalerhöhung aus Gesellschaftsmitteln ist …',['ein Passivtausch (Rücklagen → Grundkapital) ohne Mittelzufluss','eine Barkapitalerhöhung','nur für Banken zulässig','eine Form der Kreditaufnahme'],'Es werden Gratisaktien ausgegeben – der Kurs sinkt rechnerisch, das dividendenberechtigte Kapital steigt.'),
+TF('Bei der Kapitalerhöhung gegen Einlagen haben Altaktionäre ein gesetzliches Bezugsrecht.',true,'Zur Aufrechterhaltung von Quote, Stimmrecht und Vermögen.'),
+MC('Wann ist der Ausschluss des Bezugsrechts nach § 186 Abs. 3 AktG typischerweise zulässig?',['Kapitalerhöhung ≤ 10 % des GK und Ausgabekurs nicht wesentlich unter dem Börsenkurs','Immer bei Verlusten','Wenn der Vorstand es wünscht','Nur bei Namensaktien'],'Zwei Bedingungen: 10 %-Grenze + Ausgabekurs nahe Börsenkurs.')]},
+
+{t:'Emission & Platzierung',cards:[
+card('Platzierungsmethoden',`<ul><li><b>Festpreisverfahren:</b> Wert über DVFA-Ergebnis × KGV; Bezugskurs „leicht“ unter Börsenkurs.<br><i>Bsp.: 40 Mio × KGV 15 = 600 Mio ÷ 20 Mio Aktien = <b>30 €</b>/Aktie</i></li><li><b>Bookbuilding:</b> Preisspanne, Investoren geben Gebote im <b>Orderbuch</b> ab → marktgerechter Preis</li><li><b>Auktionsverfahren:</b> jeder nennt Menge &amp; Maximalpreis; das <b>niedrigste noch zum Zuge kommende Gebot</b> bestimmt den Zuteilungspreis</li></ul><p><b>Bookbuilding-Ablauf:</b> Pre-Marketing → Marketing (Roadshow) → Ordertaking/Orderbuch → Preisfixierung → Zuteilung → Börseneinführung</p>`),
+card('Rückkauf eigener Aktien',`<p>Grundsätzlich <b>verboten</b> (Gläubigerschutz). Ausnahmen u. a.:</p><ul><li>Abwendung eines schweren Schadens</li><li>Angebot an Arbeitnehmer</li><li>Abfindung von Aktionären</li><li>Einziehung (Kapitalherabsetzung)</li><li>Kredit-/Finanzinstitute zum Wertpapierhandel (max. <b>5 %</b>)</li><li>HV-Ermächtigung: höchstens <b>18 Monate</b>, max. <b>10 %</b> des GK; Eigenhandel als Zweck ausgeschlossen</li></ul>`)],
+qs:[
+MC('Was kennzeichnet das Bookbuilding-Verfahren?',['Preisspanne; Investoren geben Gebote in ein Orderbuch ab','Fester Preis ohne Spanne','Der Emittent bestimmt den Preis allein','Auktion ohne Mengenangaben'],'Die Investoren sind in die Preisfindung eingebunden.'),
+MC('Wodurch wird im Auktionsverfahren der Zuteilungspreis bestimmt?',['Durch das niedrigste noch zum Zuge kommende Gebot','Durch das höchste Gebot','Durch den Durchschnitt aller Gebote','Durch den Vorstand'],'Kein Preisrahmen – Menge und Maximalpreis werden genannt.'),
+NU('DVFA-Ergebnis 40 Mio €, vergleichbares KGV 15, 20 Mio Aktien. Wert je Aktie?',30,0.01,'€','40 × 15 = 600 Mio € börsenanalytischer Wert; 600 Mio ÷ 20 Mio Aktien = 30 €.'),
+OR('Bringe das Bookbuilding in die richtige Reihenfolge.',['Pre-Marketing (Markt aushorchen)','Marketing / Roadshow','Ordertaking (Orderbuch füllen)','Fixierung des Emissionspreises','Zuteilung','Börseneinführung'],'Pre-Marketing → Marketing → Orderbuch → Preis → Zuteilung → Handel.'),
+TF('Aktiengesellschaften dürfen grundsätzlich jederzeit eigene Aktien zurückkaufen.',false,'Grundsätzlich verboten (Gläubigerschutz) – nur bei gesetzlichen Ausnahmen.'),
+MC('Eine HV-Ermächtigung zum Rückkauf eigener Aktien gilt höchstens …',['18 Monate und max. 10 % des Grundkapitals','5 Jahre und max. 50 %','12 Monate und max. 5 %','unbegrenzt'],'Höchst- und Mindestpreise müssen festgelegt sein; Eigenhandel ist kein zulässiger Zweck.')]},
+
+{t:'Bewertung & Analyse',cards:[
+card('Kennzahlen',`<ul><li><b>KGV</b> = Kurs ÷ Gewinn je Aktie (Ø Deutschland ≈ 16) – Vergleich nur <b>innerhalb der Branche</b>; Problem bei Verlustfirmen</li><li><b>Dividendenrendite</b> = Dividende je Aktie ÷ Kurs</li><li><b>KCF</b> = Kurs ÷ Cash Flow je Aktie – weniger <b>manipulationsanfällig</b></li><li><b>Bilanzkurs</b> = bilanzieller Substanzwert (Eigenkapital je Aktie)</li><li><b>Ertragswertkurs</b> = Barwert aller erwarteten Rückflüsse (Dividenden- oder Gewinnmodell)</li></ul><div class="tip">Niedriges KGV/KCF und hohe Dividendenrendite → gelten als „kaufenswert“.</div>`),
+card('Fundamental vs. technisch',`<ul><li><b>Fundamentalanalyse:</b> Kurs schwankt um den <b>inneren Wert</b> (Summe diskontierter künftiger Zahlungen). <i>Top-down:</i> Global → Branche → Unternehmen. <i>Bottom-up:</i> Einzelaktien → Aggregation.</li><li><b>Technische Analyse:</b> Kursverlaufsmuster (Trendlinien, gleitende Durchschnitte, Unterstützung). Beantwortet <b>„Wann?“</b>, nicht „Wie viel ist die Aktie wert?“. Kritik: nicht theoretisch fundiert, Random-Walk.</li></ul><p><b>Charts:</b> Linie (Schlusskurse) · Balken (Open/High/Low/Close) · <b>Candlestick</b>: Körper = Eröffnung↔Schluss; Schluss &gt; Eröffnung → unausgefüllt (häufig grün), Schluss &lt; Eröffnung → ausgefüllt (häufig rot); Schatten = Schwankungsbreite.</p><p><b>Sentiment</b> (Stimmung, z. B. Euwax-Sentiment, Börse-Frankfurt-Sentiment, Put-Call-Ratio) wirkt oft als <b>Kontraindikator</b>: Euphorie → möglicher Top, Angst → möglicher Boden.</p>`)],
+qs:[
+NU('Kurs 90 €, Gewinn je Aktie 6 €. Wie hoch ist das KGV?',15,0.01,'','KGV = 90 ÷ 6 = 15.'),
+NU('Dividende 2,40 €, Aktienkurs 60 €. Dividendenrendite?',4,0.01,'%','2,40 ÷ 60 = 4 %.'),
+MC('Wann gelten Aktien nach den Kennzahlen als „kaufenswert“?',['Niedriges KGV/KCF und hohe Dividendenrendite','Hohes KGV und niedrige Dividendenrendite','Negativer Gewinn','Hoher Kurs'],'Günstige Bewertung = wenig Kurs pro Euro Gewinn/Cash Flow.'),
+MC('Warum gilt der Cash Flow als aussagekräftiger als der Gewinn?',['Er ist weniger anfällig für bilanzpolitische Manipulation','Er ist immer höher','Er ignoriert Investitionen','Er wird von der BaFin geprüft'],'Daher das Kurs-Cash-Flow-Verhältnis (KCF).'),
+MA('Ordne Ansatz und Idee zu.',[['Fundamentalanalyse','Innerer Wert = Barwert künftiger Zahlungen'],['Technische Analyse','Kursverlaufsmuster / Charts'],['Top-down','Global → Branche → Unternehmen'],['Bottom-up','Einzelaktien → Gesamtmarkt']],'Beide Ansätze werden in der Praxis genutzt; Bottom-up ist arbeitsintensiver.'),
+MC('Im Candlestick-Chart endet eine Periode mit Schlusskurs ÜBER dem Eröffnungskurs. Der Körper ist …',['unausgefüllt (häufig grün)','ausgefüllt (häufig rot)','nur ein Strich','nicht definiert'],'Ausgefüllt/rot = Schluss unter Eröffnung.'),
+MC('Der Sentiment-Index wird oft verwendet als …',['Kontraindikator','Garant für Kursanstiege','Maß für das KGV','Zinsprognose'],'Extreme Euphorie → möglicher Markttop; extreme Angst → mögliches Markttief.'),
+TF('Die technische Analyse beantwortet die Frage „Wie viel ist die Aktie wert?“.',false,'Sie beantwortet „Wann ist ein günstiger Zeitpunkt zum Kaufen/Verkaufen?“.'),
+MC('Der Bilanzkurs verdeutlicht …',['den bilanziellen Substanzwert je Aktie (Eigenkapital ÷ Aktien)','den Barwert künftiger Dividenden','die Kursuntergrenze laut Börse','die Rendite der Anleihe'],'Ertragswertkurs dagegen = Barwert der Rückflüsse.'),
+TF('KGV-Vergleiche sind nur zwischen Firmen derselben Branche sinnvoll.',true,'Zudem eingeschränkt bei Turn-around-Situationen und unterschiedlichen Bilanzierungsarten.')]}
+]});
+
+/* ============ UNIT 4 ============ */
+U({id:'u4',icon:'💶',title:'Anleihen & Rendite',sub:'Emittenten · Rating · YTM · Nullkuponzinsen',lessons:[
+{t:'Anleihen & Emittenten',cards:[
+card('Charakteristika',`<p>Anleihe = verzinsliches Wertpapier; <b>Anleger = Gläubiger</b>, <b>Emittent = Schuldner</b>. Merkmale: <b>Nominalwert, Kupon, Laufzeit, Emittent, Tilgungsmodalitäten</b>.</p><p>Nach Emittent: öffentliche Hand · <b>Bank Bonds</b> · <b>Corporate Bonds</b>.</p>`),
+card('Bundeswertpapiere',`<table><tr><th>Papier</th><th>Laufzeit</th></tr><tr><td>Bundesanleihe</td><td>10 / 30 Jahre</td></tr><tr><td>Bundesobligation</td><td>5 Jahre</td></tr><tr><td>Bundesschatzanweisung</td><td>2 Jahre</td></tr></table><ul><li>Emission via <b>Finanzagentur</b> im <b>Tenderverfahren</b> (Bietergruppe Bundesemission)</li><li>Zins jährlich, <b>actual/actual</b>, Rückzahlung zum Nennwert, Stückelung 0,01 €, Mindestgebot 1 Mio €</li><li><b>Amerikanisch:</b> jeder erfolgreiche Bieter zahlt seinen gebotenen Preis · <b>Niederländisch:</b> alle zahlen denselben Preis (marginales Gebot)</li></ul><p>Funktionen: Referenzzins, „sicherer Hafen“. Nachteile: niedrige Rendite, Zins- &amp; Inflationsrisiko.</p>`),
+card('Bank Bonds',`<ul><li><b>Senior unsecured</b> – nicht besichert, vorrangig</li><li><b>Pfandbrief</b> – besichert durch Deckungsstock, <b>doppelter Rückgriff</b> (Bank + Sicherheitenpool), sehr sicher</li><li><b>Nachrangig</b> – im Insolvenzfall nachrangig, höhere Rendite</li><li><b>AT1</b> – Hybrid zwischen EK und FK, Verlustbeteiligung, sehr hohes Risiko</li></ul>`)],
+qs:[
+MA('Ordne die Bundeswertpapiere ihrer Laufzeit zu.',[['Bundesschatzanweisung','2 Jahre'],['Bundesobligation','5 Jahre'],['Bundesanleihe','10 oder 30 Jahre']],'Kurz → Schatz, mittel → Obligation, lang → Anleihe.'),
+MC('Beim niederländischen Tenderverfahren …',['zahlen alle erfolgreichen Bieter denselben Preis (marginales Gebot)','zahlt jeder seinen gebotenen Preis','wird der Preis vom Emittenten festgesetzt','erhält nur der höchste Bieter den Zuschlag'],'Amerikanisch = individueller Preis.'),
+MC('Was bedeutet „doppelter Rückgriff“ beim Pfandbrief?',['Rückgriff auf die Bank und auf den Deckungsstock','Zwei Zinszahlungen pro Jahr','Rückgriff auf Emittent und Staat','Doppelte Rückzahlung'],'Daher sehr hohe Sicherheit bei geringer Rendite.'),
+MC('AT1-Anleihen sind …',['Hybridinstrumente zwischen Eigen- und Fremdkapital mit Verlustbeteiligung','Staatsanleihen','Besicherte Pfandbriefe','Kurzläufer mit Kapitalschutz'],'Hohe Rendite, sehr hohes Risiko.'),
+MC('Wie werden Bundeswertpapiere emittiert?',['Im Tenderverfahren über die Finanzagentur / Bietergruppe Bundesemission','Über Bookbuilding','Über die Eurex','Durch Privatplatzierung'],'Marktorientierte Preisbildung durch Auktion.'),
+TF('Bei Bundeswertpapieren erfolgt die Zinszahlung jährlich und die Rückzahlung zum Nennwert.',true,'Zinsberechnung actual/actual.'),
+MC('Bei einer Anleihe ist der Anleger …',['Gläubiger','Schuldner','Miteigentümer','Haftender Gesellschafter'],'Emittent = Schuldner.')]},
+
+{t:'Rating & Credit Spread',cards:[
+card('Ratingstufen',`<table><tr><th>S&amp;P / Fitch</th><th>Moody’s</th><th>Bedeutung</th></tr><tr><td>AAA</td><td>Aaa</td><td>höchste Bonität</td></tr><tr><td>AA / A</td><td>Aa / A</td><td>sehr gut / gut</td></tr><tr><td>BBB</td><td>Baa</td><td>befriedigend – <b>letzte Investment-Grade-Stufe (BBB-/Baa3)</b></td></tr><tr><td>BB, B</td><td>Ba, B</td><td><b>spekulativ / High Yield</b></td></tr><tr><td>CCC … C</td><td>Caa … C</td><td>akute Ausfallgefahr</td></tr><tr><td>D / SD</td><td>–</td><td>Zahlungsverzug / Ausfall</td></tr></table><p>Je <b>schlechter die Bonität</b>, desto <b>höher die Rendite</b>.</p>`),
+card('Corporate Bonds &amp; Credit Spread',`<p><b>Credit Spread = Rendite des Corporate Bond − risikofreier Zins</b> (Staatsanleihe/Swapsatz).</p><p>Er kompensiert <b>Ausfallrisiko</b> und <b>Liquiditätsrisiko</b>.</p><ul><li><b>Investment Grade</b> vs. <b>High Yield</b></li><li>Plain Vanilla · FRN · Nullkupon · Nachranganleihen</li></ul>`)],
+qs:[
+MC('Ab welchem Rating spricht man von „Investment Grade“?',['BBB- (S&P) / Baa3 (Moody’s) und besser','BB+ und besser','A und besser','AAA'],'Darunter: spekulativ („High Yield“).'),
+MC('BB+ ist …',['spekulatives Rating (High Yield)','Investment Grade','Höchstbonität','Ausfall'],'Die Grenze liegt zwischen BBB- und BB+.'),
+MC('Der Credit Spread ist …',['Rendite der Unternehmensanleihe minus risikoloser Zins','Differenz zwischen Geld- und Briefkurs','Zinsdifferenz zwischen Kupon und Inflation','Aufschlag auf den Nominalwert'],'Er ist Bewertungsgröße für Corporate Bonds.'),
+MS('Wofür entschädigt der Credit Spread?',['Ausfallrisiko','Liquiditätsrisiko'],['Währungsrisiko bei Euro-Anleihen','Steuerrisiko'],'Credit Spread = Risikoprämie für Bonität und Handelbarkeit.'),
+TF('Mit abnehmender Bonität steigt die geforderte Rendite.',true,'Risiko und Rendite hängen zusammen.'),
+MA('Ordne zu.',[['AAA','Höchste Bonität'],['BBB','Angemessen, aber spekulative Elemente'],['CCC','Spürbare Ausfallwahrscheinlichkeit'],['D','Zahlungsverzug / Ausfall']],'Rating-Skala von „sehr sicher“ bis „ausgefallen“.')]},
+
+{t:'Rendite & Zerobond-Zinsen',cards:[
+card('Yield to Maturity',`<p>Die <b>Rendite</b> (YTM) ist der <b>interne Zinsfuß</b>: Mit ihr diskontiert, entspricht der Barwert aller Rückflüsse dem Marktwert.</p><p class="f">MW = Σ CF<sub>t</sub> / (1+R)<sup>t</sup></p><p><i>Bsp.: 3 J., Kupon 4 %, 1 Mio €, MW 920.321,43 € → <b>R = 7,0383 %</b></i></p><div class="tip">Kupon &lt; Rendite ⇒ Kurs <b>unter pari</b>.</div>`),
+card('Anleihespezifische Rendite vs. Nullkuponzins',`<ul><li>Jede Anleihe hat <b>eigene</b> Rendite (Beispiel: 7,0383 % / 6,0145 % / 5,0000 %) – gleichzeitige Zahlungen werden unterschiedlich diskontiert.</li><li><b>Periodenspezifische Nullkuponzinssätze</b> (Zerobondrenditen: 5,0000 % / 6,0303 % / 7,0969 %) erlauben die <b>eindeutige</b> Bewertung einer Zahlung.</li><li>Marktwert einer Anleihe = Σ CF<sub>t</sub> / (1+z<sub>t</sub>)<sup>t</sup></li><li>Zerobond-Preis = Nennwert / (1+z<sub>n</sub>)<sup>n</sup></li></ul><div class="tip">Bei einer 1-jährigen Anleihe gilt: z<sub>1</sub> = YTM<sub>1</sub>. Höhere z<sub>t</sub> berechnet man „von vorne nach hinten“ (Bootstrapping).</div>`)],
+qs:[
+NU('1-jährige Anleihe, Kupon 4 %, Nominal 1.000.000 €, Marktwert 990.476,19 €. Rendite?',5,0.01,'%','1.040.000 ÷ 990.476,19 = 1,05 → 5 %.'),
+NU('Anleihe: Nominal 100.000 €, Kupon 5 %, Restlaufzeit 2 Jahre, Rendite 4 %. Marktwert?',101886.09,1,'€','5.000/1,04 + 105.000/1,04² = 4.807,69 + 97.078,40 = 101.886,09 €.'),
+NU('Zerobond, Nominal 100, Laufzeit 3 Jahre, Nullkuponzins 4 %. Preis?',88.9,0.05,'','100 ÷ 1,04³ = 88,8996 ≈ 88,90.'),
+MC('Warum haben verschiedene Anleihen unterschiedliche anleihespezifische Renditen?',['Gleiche Zahlungszeitpunkte werden mit unterschiedlichen Sätzen diskontiert – die Rendite ist ein „Mischsatz“','Weil sie unterschiedliche Währungen haben','Weil der Staat sie festlegt','Weil Kupons steuerpflichtig sind'],'Die YTM mittelt über alle Zahlungszeitpunkte; Nullkuponzinsen sind je Zeitpunkt eindeutig.'),
+MC('Wozu dienen die periodenspezifischen Nullkuponzinssätze?',['Zur eindeutigen Bestimmung des Barwerts jeder zukünftigen Zahlung','Zur Berechnung der Steuer','Zur Ermittlung des Ratings','Zur Berechnung der Dividende'],'Jeder Cashflow wird mit „seinem“ Zerobondzins abgezinst.'),
+TF('Liegt der Marktwert einer Anleihe unter dem Nominalwert, so ist die Rendite höher als der Kupon.',true,'Kurs < 100 % ⇒ Rendite > Kupon (und umgekehrt).'),
+MC('Die Yield to Maturity kann interpretiert werden als …',['interner Zinsfuß / Effektivverzinsung bis zur Endfälligkeit','Nominalzins','Dividendenrendite','laufende Verzinsung'],'Der Diskontsatz, der Barwert und Marktwert gleichsetzt.')]}
+]});
+/* ============ UNIT 5 ============ */
+U({id:'u5',icon:'⏱️',title:'Zinsrisiko & Duration',sub:'Macaulay · Modified Duration · Kritik',lessons:[
+{t:'Macaulay-Duration',cards:[
+card('Definition',`<p class="f">D = Σ t · CF<sub>t</sub>/(1+R)<sup>t</sup> ÷ MW<sub>0</sub></p><ul><li>Zeitraumkennzahl in <b>Jahren</b></li><li><b>durchschnittliche Kapitalbindungsdauer</b> / „Schwerpunkt“ der Zahlungsströme</li><li>Bsp.: 10 J., Kupon 6 %, Rendite 3,754 % → <b>D = 8,002 Jahre</b> (MW 1.184,42)</li></ul>`),
+card('Eigenschaften',`<ul><li><b>Zerobond:</b> D = Laufzeit</li><li><b>Kuponanleihe:</b> D <b>&lt;</b> Laufzeit (Zinszahlungen kommen früher)</li><li>D sinkt bei <b>höherem Nominalzins</b>, <b>höherer Rendite</b> und <b>früherer Tilgung</b></li><li>Zum Zeitpunkt t = D ist der Marktwert <b>unabhängig</b> von einer Renditeänderung (Immunisierung)</li></ul>`)],
+qs:[
+NU('Wie hoch ist die Macaulay-Duration eines Zerobonds mit 7 Jahren Restlaufzeit?',7,0,'Jahre','Beim Zerobond gibt es nur eine Zahlung – D = Laufzeit.'),
+TF('Die Duration einer Kuponanleihe ist immer kleiner als ihre Restlaufzeit.',true,'Die Zinszahlungen ziehen den Schwerpunkt der Zahlungen nach vorn.'),
+MS('Wann sinkt die Duration (bei gleicher Laufzeit)?',['Höherer Nominalzins','Höhere Marktrendite','Frühere Tilgung'],['Niedrigerer Nominalzins','Längere Laufzeit'],'Je früher/mehr Geld zurückfließt, desto kürzer die durchschnittliche Kapitalbindung.'),
+NU('Anleihe: Nominal 100, Kupon 5 %, 2 Jahre, Rendite 5 % (MW = 100). Macaulay-Duration?',1.9524,0.01,'Jahre','D = (1·4,762 + 2·95,238) ÷ 100 = 1,952 Jahre.'),
+MC('Ökonomisch beschreibt die Duration …',['die durchschnittliche Kapitalbindungsdauer einer Anleihe','die Restlaufzeit','den Kupon','die Bonität'],'Der „Schwerpunkt“ der Zahlungsströme auf der Zeitachse.'),
+MC('Warum reagiert ein Zerobond stärker auf Zinsänderungen als eine Kuponanleihe gleicher Laufzeit?',['Er hat die längere Duration','Er hat das schlechtere Rating','Er hat den höheren Kupon','Er ist steuerpflichtig'],'Höhere Duration = höhere Zinssensitivität.')]},
+
+{t:'Modified Duration & Kritik',cards:[
+card('Modified Duration',`<p class="f">MD = D ÷ (1 + R)</p><p>Näherung der <b>prozentualen Marktwertänderung</b> bei Renditeänderung:</p><p class="f">ΔMW/MW ≈ − MD · ΔR</p><p>Absolut: <span class="f">ΔMW ≈ − MD · MW · ΔR</span></p><p><i>Bsp.: MD 7,7 → +1 %-Punkt Rendite ⇒ Marktwert ca. −7,7 %.</i></p>`),
+card('Kritik an der Modified Duration',`<ul><li>unterstellt implizit eine <b>horizontale Zinskurve</b> (= Rendite der Anleihe)</li><li>bildet nur <b>Parallelverschiebungen</b> der Zinskurve ab</li><li><b>Approximationsfehler</b> (Duration ist nur eine lineare Näherung – Konvexität)</li></ul>`)],
+qs:[
+NU('Macaulay-Duration 8,002 Jahre, Marktrendite 3,754 %. Modified Duration?',7.71,0.01,'Jahre','MD = 8,002 ÷ 1,03754 = 7,7125.'),
+NU('Modified Duration 7,7. Die Rendite steigt um 1 Prozentpunkt. Um wie viel Prozent fällt der Marktwert ungefähr?',7.7,0.05,'%','ΔMW/MW ≈ −MD · ΔR = −7,7 % .'),
+MS('Welche Kritikpunkte gelten für die Modified Duration?',['Sie unterstellt eine horizontale Zinskurve','Sie erfasst nur Parallelverschiebungen der Zinskurve','Sie ist eine Näherung (Approximationsfehler)'],['Sie gilt nur für Aktien','Sie setzt den Ausfall des Emittenten voraus'],'Die drei klassischen Kritikpunkte.'),
+TF('Je höher die Duration, desto höher die Zinssensitivität des Marktwerts.',true,'Die Modified Duration misst genau diese Sensitivität.'),
+MC('Fallstudie: Warum hat ein 5-jähriger Zerobond eine höhere Duration als eine 5-jährige Kuponanleihe?',['Bei der Kuponanleihe fließt vorab Geld zurück – der Zahlungsschwerpunkt liegt früher','Der Zerobond hat einen höheren Kupon','Die Kuponanleihe hat eine längere Laufzeit','Der Zerobond wird nicht besteuert'],'Zerobond: D = 5; Kuponanleihe 2,5 %: D ≈ 4,77.'),
+MC('Ein Anleger erwartet FALLENDE Zinsen. Welche Anleihe profitiert am stärksten?',['Lange Laufzeit, niedriger Kupon (hohe Duration)','Kurze Laufzeit, hoher Kupon','Floating Rate Note','Geldmarktkonto'],'Hohe Duration = hoher Kursgewinn bei Zinsrückgang.')]}
+]});
+
+/* ============ UNIT 6 ============ */
+U({id:'u6',icon:'🧩',title:'Sonderformen am Kassamarkt',sub:'Genussschein · ETF · WSV · OA · Zerobond · FRN · Aktienanleihe',lessons:[
+{t:'Genussscheine & ETF',cards:[
+card('Genussscheine – „Zwitterpapiere“',`<p>Verbriefen <b>Vermögensrechte</b> ohne Stimmrecht. In D <b>keine gesetzliche Regelung</b> (außer AktG) → frei ausgestaltbar → <b>Bedingungen vorab prüfen</b> (Kündigungsrecht, Nachrang, Zinsänderungsrisiko).</p><table><tr><th></th><th>FK-Charakter</th><th>EK-Charakter</th></tr><tr><td>Notiz</td><td>in <b>Prozent</b></td><td>in <b>Stück</b></td></tr><tr><td>Laufzeit</td><td>begrenzt</td><td>unbegrenzt (Kündigungsrecht Emittent)</td></tr><tr><td>Ausschüttung</td><td>fest oder variabel</td><td>Teilnahme an Gewinn <b>und Verlust</b></td></tr><tr><td>Liquidation</td><td>gleichrangig mit Gläubigern</td><td><b>nachrangig</b>, haftendes EK</td></tr></table>`),
+card('ETF',`<ul><li>börsengehandelte, <b>passiv</b> gemanagte Indexfonds – bilden den Index (fast) 1:1 nach</li><li>kein Ausgabeaufschlag; Kosten ca. <b>0,15–0,7 % p. a.</b>; geringe Spreads</li><li><b>Sondervermögen</b> → im Insolvenzfall des Anbieters geschützt (Bonitätsvorteil ggü. <b>Indexzertifikaten</b>)</li><li>Dividenden fließen dem Anleger zu</li><li>Handel u. a. XTF-Segment der FWB / Xetra-Funds</li></ul><div class="tip">ETF = Flexibilität einer Aktie + Risikostreuung eines Fonds.</div>`)],
+qs:[
+MC('Genussscheine werden als „Zwitterpapiere“ bezeichnet, weil …',['sie Merkmale von Eigen- und Fremdkapital verbinden können','sie in zwei Währungen notieren','sie nur an zwei Börsen handelbar sind','sie Aktien und Optionen kombinieren'],'Je nach Ausgestaltung anleihe- oder aktienähnlich.'),
+MS('Welche Merkmale passen zu Genussscheinen mit EK-Charakter?',['Nachrang bei Liquidation','Teilnahme an Gewinn und Verlust','Notierung in Stück'],['Notierung in Prozent','Gleichrang mit anderen Gläubigern'],'FK-Charakter: Prozentnotiz & Gleichrang.'),
+TF('Genussscheininhaber haben ein Stimmrecht in der Hauptversammlung.',false,'Genussscheine gewähren kein Stimmrecht.'),
+MC('Wie ist die Ausgestaltung von Genussscheinen in Deutschland gesetzlich geregelt?',['Keine eigene gesetzliche Grundlage – frei ausgestaltbar','Streng im WpHG normiert','Einheitlich durch die Börse vorgegeben','Nur als Pfandbrief zulässig'],'Deshalb Genussschein-Bedingungen vorab anfordern!'),
+MC('Welchen Vorteil haben ETFs gegenüber Indexzertifikaten?',['Sondervermögen – im Insolvenzfall des Emittenten geschützt','Höhere garantierte Rendite','Steuerfreiheit','Kein Spread'],'Zertifikate = Schuldverschreibungen mit Emittentenrisiko.'),
+MC('Typische laufende Kosten eines ETF:',['ca. 0,15 – 0,7 % p. a. Verwaltungsgebühr, kein Ausgabeaufschlag','5 % Ausgabeaufschlag','2 % Performance Fee','keine Kosten'],'Passives Management ist kostengünstig.')]},
+
+{t:'WSV & Optionsanleihe',cards:[
+card('Wandelschuldverschreibung (WSV)',`<p>Anleihe einer AG + <b>Recht zum Umtausch in Aktien</b> (Wandlungsverhältnis, -frist, -preis stehen bei Emission fest).</p><ul><li>Mit Wandlung <b>erlischt</b> die Anleihe („Titanic-Anleihe“)</li><li>HV-Beschluss mit <b>¾-Mehrheit</b> → <b>bedingte Kapitalerhöhung</b></li><li>Bilanz: <b>Passivtausch</b> befristetes FK → unbefristetes EK, Bilanzsumme bleibt gleich</li><li>Rendite ca. <b>1–2 %</b> unter Kapitalmarktzins (Wandlungsrecht ist „bezahlt“)</li><li>Kurs nimmt an steigenden Aktienkursen teil, nach unten „Puffer“ über den Zins</li><li>Bewertung: Anleihe- + Optionskomponente; <b>Untergrenze = max(Anleihewert; Wandlungswert)</b></li></ul>`),
+card('Optionsanleihe (OA)',`<ul><li>Anleihe + <b>Optionsschein</b> (Bezugsrecht auf Aktien)</li><li>Bei Ausübung bleibt das <b>Forderungsrecht bestehen</b> (anders als WSV!)</li><li>Notierung: <b>Anleihe cum</b> (volle Stücke, mit OS) · <b>Anleihe ex</b> (leere Stücke) · <b>Optionsschein</b> allein</li><li>Fix bei Emission: Bezugsverhältnis, -frist, -kurs; ¾-HV, bedingte KapErh</li><li>Innerer Wert OS = Aktienkurs − Basispreis (Bsp. 180 − 140 = 40)</li></ul><div class="tip"><b>WSV-Aufgabe:</b> 300 Mio € WSV (Stückelung 100 €), Umtauschverhältnis 3:1 (3 WSV → 1 Aktie à 100 €) ⇒ bedingte KapErh max. <b>100 Mio €</b>.<br><b>Bezugsverhältnis 5:1</b> = 5 alte Aktien berechtigen zum Bezug 1 WSV (Schutz der Altaktionäre vor <b>Verwässerung</b>); <b>Umtauschverhältnis</b> = Verhältnis, zu dem WSV in Aktien getauscht werden.</div>`)],
+qs:[
+MC('Was unterscheidet die Wandelanleihe von der Optionsanleihe?',['Bei der WSV erlischt mit der Wandlung die Forderung, bei der OA bleibt sie bestehen','Die OA ist unverzinslich','Die WSV ist ein Derivat','Es gibt keinen Unterschied'],'WSV: Umtausch (Anleihe weg). OA: Optionsrecht separat, Anleihe bleibt.'),
+MC('Welche Mehrheit braucht die HV für die Ausgabe von WSV/OA?',['¾-Mehrheit (75 %)','Einfache Mehrheit','Einstimmigkeit','Keine HV nötig'],'Qualifizierte Mehrheit – bedingte Kapitalerhöhung.'),
+TF('Bei der Wandlung einer WSV verändert sich die Bilanzsumme der AG nicht.',true,'Passivtausch: befristetes Fremdkapital → unbefristetes Eigenkapital.'),
+MC('Warum liegt die Verzinsung einer WSV unter dem Kapitalmarktzins?',['Der Anleger erhält zusätzlich das Wandlungsrecht (Option)','Die AG ist insolvent','Sie ist steuerfrei','Sie hat Kapitalschutz'],'Typisch 1–2 % unter laufenden Zinsen.'),
+MC('Die Wertuntergrenze einer Wandelanleihe entspricht …',['dem Maximum aus Anleihewert und Wandlungswert','dem Nominalwert','dem Aktienkurs','dem Optionswert'],'Aus Sicht des Anlegers gilt: mindestens der höhere der beiden Werte.'),
+MA('Ordne die Notierungsarten der Optionsanleihe zu.',[['Anleihe cum','Volle Stücke – Anleihe inkl. Optionsschein'],['Anleihe ex','Leere Stücke – Anleihe ohne Optionsschein'],['Optionsschein (Warrant)','Nur das Optionsrecht']],'cum = mit, ex = ohne.'),
+NU('Optionsschein-Aufgabe: Aktienkurs 180 €, Basispreis 140 €. Innerer Wert?',40,0,'€','180 − 140 = 40 €.'),
+NU('300 Mio € WSV, Stückelung 100 €, Umtauschverhältnis 3:1 (3 WSV → 1 Aktie à 100 € Nennwert). Max. bedingte Kapitalerhöhung in Mio €?',100,0,'Mio €','300 Mio ÷ 3 = 100 Mio € – das ist der maximale Betrag.'),
+MS('Was steht bei Emission einer WSV bereits fest?',['Wandlungsverhältnis','Wandlungsfrist','Wandlungspreis'],['Künftiger Aktienkurs','Künftige Dividende'],'Alle Konditionen des Wandlungsrechts sind vorab festgelegt.'),
+MC('Eine AG bietet ihren Aktionären WSV im Bezugsverhältnis 5:1 an. Was bedeutet das?',['5 alte Aktien berechtigen zum Bezug einer WSV','5 WSV können in 1 Aktie getauscht werden','Jede WSV wird mit 5 % verzinst','Der Kurs der WSV liegt bei 5 % des Nennwerts'],'Bezugsverhältnis = Bezugsrecht der Altaktionäre auf die WSV (Schutz vor Verwässerung). Umtauschverhältnis dagegen = Tausch WSV → Aktien (z. B. 3:1).')]},
+
+{t:'Zerobond, FRN & Aktienanleihe',cards:[
+card('Zerobond',`<ul><li>Keine Kupons – Ertrag = Rückzahlung − Emissionskurs (Zins &amp; Zinseszins abdiskontiert → Emissionskurs <b>weit unter pari</b>)</li><li>Steuer erst bei <b>Zufluss</b> (Liquiditätsvorteil)</li><li><b>Hohe Hebelwirkung</b>, kein Wiederanlagerisiko, Bonitätsrisiko konzentriert auf Fälligkeit</li><li>Lange Laufzeiten (10–20 J.) · Erwartung <b>fallende Zinsen</b> → langer Zerobond</li></ul><table><tr><th>Form</th><th>t=0</th><th>t=5</th></tr><tr><td>normale Anleihe</td><td>−1.000</td><td>Kupons + 1.100</td></tr><tr><td>Zuwachsanleihe</td><td>−1.000</td><td>+1.611</td></tr><tr><td><b>echte Nullkupon</b></td><td>−621</td><td>+1.000</td></tr></table>`),
+card('FRN (Floating Rate Note)',`<ul><li>Variabler Zins = <b>Referenzzins</b> (Euribor 1/3/6/12 M) + <b>Aufschlag</b> (Bonität)</li><li>Kurse <b>nahe pari</b> – nahezu kein Kursrisiko; Laufzeit 5–10 J.</li><li>Surrogat für Festgeld / Spareinlagen; Partizipation an steigenden Zinsen</li><li><b>Reverse Floater</b>: Zins sinkt, wenn Marktzins steigt (Erwartung fallender Geldmarktzinsen)</li><li>Sonderformen: Capped (Höchstzins), Drop Lock (Mindestzins), Minimax, Convertible</li></ul>`),
+card('Aktienanleihe',`<ul><li>Fester <b>Kupon</b> (deutlich über Marktzins) – Emittent hat <b>Wahlrecht</b>: Rückzahlung zum Nennwert <b>oder</b> Lieferung einer festgelegten Aktienzahl</li><li>Aktien kommen, wenn der Kurs am Laufzeitende <b>unter dem Basispreis</b> liegt</li><li>= <b>Anleihe + Short Put</b> auf die Aktie</li><li>Die Art der Tilgung beeinflusst die Zinszahlung <b>nicht</b></li></ul>`)],
+qs:[
+MC('Der Emissionskurs eines Zerobonds liegt …',['deutlich unter pari','bei 100 %','über pari','beim Kupon'],'Zins und Zinseszins werden abdiskontiert.'),
+MC('Ein Anleger erwartet stark sinkende Zinsen. Welche Anleihe nutzt dies am stärksten?',['Zerobond mit langer Laufzeit','FRN','Kurzläufer mit hohem Kupon','Geldmarktfonds'],'Hohe Duration = hoher Hebel auf Zinsrückgang (aber auch bei Anstieg!).'),
+MS('Vorteile eines Zerobonds:',['Kein Wiederanlagerisiko','Besteuerung erst bei Zufluss','Hohe Hebelwirkung bei Zinsänderungen'],['Laufende Zinseinnahmen','Bonitätsrisiko verteilt sich über die Laufzeit'],'Nachteil: Bonitätsrisiko konzentriert sich auf den Fälligkeitstermin.'),
+MC('Bei der „echten Nullkuponanleihe“ …',['zahlt der Anleger abgezinst (z. B. 621 für 1.000 Rückzahlung)','zahlt der Anleger 1.000 und erhält 1.611','werden jährlich Kupons gezahlt','ist die Rückzahlung variabel'],'Zuwachsanleihe: Ausgabe zu 100 %, Rückzahlung höher.'),
+MC('Wie setzt sich der Zins einer FRN zusammen?',['Referenzzins (z. B. Euribor) + bonitätsabhängiger Aufschlag','Fester Kupon','Dividende des Emittenten','Inflationsrate'],'Zinsanpassung nach 1, 3, 6 oder 12 Monaten.'),
+MC('Warum hat eine FRN kaum Kursrisiko?',['Der Zins wird laufend angepasst – Kurs bleibt nahe pari','Sie ist staatlich garantiert','Sie hat Kapitalschutz','Sie notiert nur einmal täglich'],'Ideal als Festgeld-Ersatz.'),
+MC('Ein Reverse Floater passt zur Erwartung …',['fallender Geldmarktzinsen','steigender Geldmarktzinsen','steigender Aktienkurse','sinkender Inflation'],'Sein Zins entwickelt sich entgegengesetzt zum Marktzins.'),
+MC('Eine Aktienanleihe besteht (aus Sicht des Anlegers) aus …',['Anleihe + verkaufter Put-Option (Short Put)','Anleihe + gekaufter Call','Aktie + Future','Zerobond + Call'],'Der Kupon enthält die Optionsprämie.'),
+MC('Wann werden bei einer Aktienanleihe Aktien geliefert?',['Wenn der Aktienkurs am Laufzeitende unter dem Basispreis notiert','Wenn der Kurs steigt','Immer','Nie'],'Dann ist die Aktienlieferung für den Emittenten günstiger als Nominalrückzahlung.')]}
+]});
+
+/* ============ UNIT 7 ============ */
+U({id:'u7',icon:'🧮',title:'Derivate, Optionen & Swaps',sub:'Futures · Optionen · Optionsscheine · Swaps',lessons:[
+{t:'Futures & Optionen',cards:[
+card('Future',`<p><b>Unbedingtes</b> Termingeschäft: feste Verpflichtung, zu einem Termin eine Menge eines Basiswerts zu einem <b>Terminpreis</b> zu kaufen (<b>long</b>) bzw. zu verkaufen (<b>short</b>). Börsengehandelt &amp; standardisiert; <b>Margin</b> nötig.</p><p class="f">Terminpreis = Kassapreis + Finanzierungskosten − Erträge (Dividenden)</p><p>Weichen Kassa- und Terminpreis ab, nutzen <b>Arbitrageure</b> die Differenz.</p>`),
+card('Option',`<ul><li><b>Käufer</b> hat ein <b>Recht</b> (Wahlrecht): Call = kaufen, Put = verkaufen – zum <b>Basispreis (Strike)</b></li><li><b>Verkäufer = Stillhalter</b> hat die <b>Pflicht</b> und erhält die <b>Prämie</b></li><li><b>Amerikanisch:</b> jederzeit ausübbar · <b>Europäisch:</b> nur am Laufzeitende</li></ul><table><tr><th></th><th>Max. Gewinn</th><th>Max. Verlust</th></tr><tr><td>Long Call</td><td>unbegrenzt</td><td>Prämie</td></tr><tr><td>Short Call</td><td>Prämie</td><td>unbegrenzt</td></tr><tr><td>Long Put</td><td>Basispreis − Prämie</td><td>Prämie</td></tr><tr><td>Short Put</td><td>Prämie</td><td>Basispreis − Prämie</td></tr></table>`)],
+qs:[
+MA('Ordne zu.',[['Long Call','Recht zu kaufen – Verlust max. Prämie'],['Long Put','Recht zu verkaufen'],['Short Call (Stillhalter)','Pflicht zu liefern bei Ausübung'],['Short Put (Stillhalter)','Pflicht zur Abnahme bei Ausübung']],'Käufer = Recht, Verkäufer = Pflicht.'),
+MC('Wie heißt der Verkäufer einer Option?',['Stillhalter','Optionär','Emittent','Hedger'],'Er „hält still“ und muss bei Ausübung erfüllen.'),
+TF('Der Stillhalter erhält für seine Verpflichtung eine Prämie.',true,'Die Optionsprämie ist der Preis für das Recht.'),
+MC('Eine europäische Option kann ausgeübt werden …',['nur am Ende der Laufzeit','jederzeit','nur in Europa','nie'],'Amerikanisch = jederzeit.'),
+MC('Der maximale Verlust des Käufers eines Calls ist …',['die gezahlte Prämie','unbegrenzt','der Basispreis','der Kurs des Basiswerts'],'Der Call verfällt im schlimmsten Fall wertlos.'),
+MC('Wie berechnet sich theoretisch der Terminpreis eines Financial Future?',['Kassapreis + Finanzierungskosten − Erträge (Dividenden)','Kassapreis × Erwartung','Kassapreis − Prämie','Basispreis + Volatilität'],'Erwartungen der Marktteilnehmer spielen für die Preisbildung keine Rolle (Arbitrage).'),
+MC('Wer muss beim Future eine Margin hinterlegen?',['Käufer und Verkäufer','Nur der Käufer','Nur der Verkäufer','Niemand'],'Nachschusspflicht bei Verlusten – dadurch entfällt das Kontrahentenrisiko.')]},
+
+{t:'Optionsscheine & Kennzahlen',cards:[
+card('Optionsschein (Warrant)',`<ul><li><b>Verbriefte</b> Option mit eigener WKN/ISIN → <b>Wertpapier → Emittentenrisiko</b></li><li>Notiert im Freiverkehr; <b>feste Laufzeit</b>; meist <b>Barausgleich</b> (ca. 98 %)</li><li>Arten: traditionelle (aus OA), <b>naked warrants</b>, <b>covered warrants</b></li></ul>`),
+card('Kennzahlen',`<ul><li><b>Innerer Wert (Call)</b> = Aktienkurs − Basispreis (min. 0)</li><li><b>Aufgeld</b> = (OS-Preis + Basispreis − Aktienkurs) ÷ Aktienkurs</li><li><b>Hebel</b> = Aktienkurs ÷ OS-Preis (·Bezugsverhältnis)</li><li><b>Break-even</b> = Basispreis + Optionspreis</li></ul><p><i>Bsp.: Aktie 180, BP 140, OS 58 → Aufgeld 10 %, Hebel 3,1, Break-even 198.</i></p>`),
+card('Preisfaktoren',`<ul><li><b>Zeitwert</b> = Preis − innerer Wert (Wahrscheinlichkeitswert); er <b>schwindet</b> mit der Restlaufzeit (Theta)</li><li><b>im Geld / am Geld / aus dem Geld</b> je nach innerem Wert</li><li><b>Volatilität ↑ ⇒ Call UND Put teurer</b> (Vega)</li><li>Kurs Basiswert ↑ ⇒ Call ↑, Put ↓ (Delta; am Geld ≈ 0,5)</li><li>Dividendenerwartung ↑ ⇒ Call ↓, Put ↑</li><li><b>Effektiver Hebel</b> = Hebel × Delta (Omega)</li></ul>`)],
+qs:[
+NU('Call, Basispreis 40 €, Aktie notiert bei 50 €. Innerer Wert?',10,0,'€','50 − 40 = 10 €.'),
+NU('Basispreis 140 €, Optionsscheinpreis 58 €. Break-even-Kurs der Aktie?',198,0,'€','Break-even = Basispreis + Optionspreis = 198 €.'),
+NU('Aktie 180 €, Optionsscheinpreis 58 €. Hebel (1 OS ↔ 1 Aktie)?',3.1,0.05,'','Hebel = 180 ÷ 58 = 3,10.'),
+NU('Aktie 180 €, Basispreis 140 €, OS-Preis 58 €. Aufgeld in %?',10,0.05,'%','(58 + 140 − 180) ÷ 180 = 10 %.'),
+MC('Steigt die erwartete Volatilität des Basiswerts, so …',['werden Call- und Put-Optionen teurer','wird der Call teurer, der Put billiger','werden beide billiger','ändert sich nichts'],'Mehr Schwankung = höhere Chance, ins Geld zu laufen.'),
+MC('Ein Call liegt „aus dem Geld“, wenn …',['der Basispreis über dem aktuellen Kurs liegt','der Kurs über dem Basispreis liegt','die Laufzeit abgelaufen ist','er Zeitwert hat'],'Innerer Wert = 0, nur Zeitwert.'),
+MS('Welche Aussagen zu Optionsscheinen stimmen?',['Sie sind Wertpapiere und tragen Emittentenrisiko','Sie haben eine feste Laufzeit','Meist erfolgt Barausgleich'],['Sie sind Sondervermögen','Sie haben unbegrenzte Laufzeit'],'Optionsschein = verbriefte Option.'),
+MC('Ein Call am Geld hat typischerweise ein Delta von …',['≈ 0,5','≈ 0','≈ 1','≈ −1'],'Option steigt ca. 0,50 €, wenn der Basiswert um 1 € steigt.'),
+MC('Der Zeitwert einer Option …',['schwindet mit der Restlaufzeit','steigt mit der Restlaufzeit-Abnahme','ist konstant','entspricht dem inneren Wert'],'Zeitwertverfall (Theta) – Optionen sind „verfallende Anlagegüter“.')]},
+
+{t:'Swaps & Hedging',cards:[
+card('Zinsswap (Plain Vanilla)',`<ul><li>Austausch von <b>Zahlungsströmen</b> auf einen Nominalbetrag (das Nominal wird <b>nicht</b> getauscht)</li><li><b>Payer-Swap:</b> zahlt <b>fest</b>, erhält <b>variabel</b> → gewinnt bei <b>steigenden</b> Zinsen</li><li><b>Receiver-Swap:</b> erhält fest, zahlt variabel → gewinnt bei sinkenden Zinsen</li><li>OTC, <b>unbedingtes</b> Termingeschäft</li><li>Marktwert = Barwert Festseite − Barwert variable Seite; bei Abschluss <b>0</b></li><li>Variable Seite: Bewertung über <b>Forward Rates</b> (≈ Nominal am Anpassungstermin)</li></ul><p class="f">f(1,2) = (1+z₂)² ÷ (1+z₁) − 1</p>`),
+card('Hedging mit Swaps',`<p>Hält ein Investor eine <b>festverzinsliche Anleihe</b>, verliert sie bei <b>steigenden Zinsen</b> an Wert → <b>Payer-Swap</b> als Absicherung (Gewinn gleicht Kursverlust aus). Das benötigte <b>Swapvolumen</b> richtet sich nach der Zinssensitivität (Duration) beider Positionen.</p>`)],
+qs:[
+MC('Was wird bei einem Zinsswap ausgetauscht?',['Feste gegen variable Zinszahlungen – ohne Tausch des Nominalbetrags','Aktien gegen Anleihen','Nominalbeträge','Währungen und Rohstoffe'],'Der Nominalbetrag dient nur als Rechengröße.'),
+MC('Ein Payer-Swap …',['zahlt fest, erhält variabel – gewinnt bei steigenden Zinsen','zahlt variabel, erhält fest','ist ein bedingtes Termingeschäft','gewinnt bei fallenden Zinsen'],'Payer = zahlt den Festsatz.'),
+NU('Nominal 10 Mio €, Festsatz 3 %, variabler Satz 2,4 %. Nettozahlung des Payers pro Jahr in €?',60000,0,'€','(3,0 % − 2,4 %) × 10 Mio = 60.000 € Nettozahlung des Payers.'),
+MC('Der Marktwert eines Swaps bei Abschluss beträgt …',['0','den Nominalbetrag','den Festzins','die Prämie'],'Beide Seiten sind bei Abschluss fair bewertet.'),
+NU('z₁ = 2 %, z₂ = 3 %. Forward Rate für Jahr 2 in %?',4.01,0.01,'%','f = 1,03² ÷ 1,02 − 1 = 4,0098 %.'),
+MC('Wie sichert ein Halter einer Festzins-Anleihe sich gegen steigende Zinsen ab?',['Mit einem Payer-Swap','Mit einem Receiver-Swap','Mit einem Zerobond','Gar nicht'],'Der Gewinn des Payer-Swaps kompensiert den Kursverlust der Anleihe.'),
+TF('Ein Swap ist ein unbedingtes OTC-Termingeschäft.',true,'Beide Parteien sind zur Erfüllung verpflichtet.')]}
+]});
+
+/* ============ UNIT 8 ============ */
+U({id:'u8',icon:'🎯',title:'Zertifikate – Anlageprodukte',sub:'Index · Discount · Bonus · Express · Kapitalschutz · Outperformance · Sprint',lessons:[
+{t:'Zertifikate – Grundlagen',cards:[
+card('Was sind Zertifikate?',`<ul><li><b>Strukturierte Wertpapiere</b> aus Basisinstrumenten; gezielt erzeugte Gewinn-/Verlustprofile</li><li>Rechtlich: <b>Inhaberschuldverschreibung</b> (häufig nachrangig), feste Laufzeit – <b>kein Sondervermögen</b> → <b>Emittentenrisiko</b></li><li>Bausteine: <b>Anleihen</b> (Kapitalschutz) + <b>Optionen/Futures</b> (Ausgestaltung); Basiswerte: Aktien, Zinsen, Rohstoffe, Indizes, Währungen</li><li>Nicht-lineare Payoffs: Kapitalschutz, <b>Cap</b>, <b>Barriere</b>, Bonus</li><li>Rechtlich nah an der Anleihe – ökonomisch nah an der Option: <b>Hybridcharakter</b></li></ul>`),
+card('Systematik',`<table><tr><th>Typ</th><th>Hebel</th><th>Beispiele</th></tr><tr><td>Absicherungszertifikate</td><td>&lt; 1</td><td>Garantie-, Teilschutz-</td></tr><tr><td>Anlage-/Partizipation</td><td>= 1</td><td>Index, Discount, Basket, Bonus</td></tr><tr><td>Hebel/Spekulation</td><td>&gt; 1</td><td>Outperformance, Sprint, Mini-Future, KO</td></tr></table><p>Weitere Kriterien: Kapitalschutz (voll/teil/kein) · Kursschwellen · Discount · Basiswert.</p><p><b>Motive:</b> Erträge · Rendite-/Risikostruktur · individuelle Portfolios · jede Markterwartung · geringere Kosten · Börsenhandel (Einmalanlage <i>oder</i> Sparplan)</p><div class="warn">Nachteile: Emittentenrisiko · Komplexität · Margen im Preis · begrenzte Partizipation (Opportunitätskosten)</div>`)],
+qs:[
+MC('Rechtlich sind Zertifikate …',['Inhaberschuldverschreibungen des Emittenten (kein Sondervermögen)','Investmentfonds','Aktien','Bankguthaben mit Einlagensicherung'],'Deshalb das Emittentenrisiko.'),
+MA('Ordne die Zertifikatekategorie dem Hebel zu.',[['Absicherungszertifikate','Hebel < 1'],['Anlage-/Partizipationszertifikate','Hebel = 1'],['Hebel-/Spekulationszertifikate','Hebel > 1']],'Hebel = Reaktion des Zertifikats im Verhältnis zum Basiswert.'),
+MS('Woraus bestehen strukturierte Produkte typischerweise?',['Anleihen (z. B. für den Kapitalschutz)','Optionen','Futures'],['Stimmrechten der Anleger','Immobilienbeteiligungen'],'Anleihe + Derivate.'),
+TF('Zertifikate sind ein Sondervermögen und damit im Emittenten-Insolvenzfall geschützt.',false,'Kein Sondervermögen – Totalverlust bei Emittenteninsolvenz möglich.'),
+MC('Der „Hybridcharakter“ von Zertifikaten bedeutet …',['rechtlich Nähe zur Anleihe, ökonomisch Nähe zur Option','Mischung aus Aktie und Immobilie','Gleichzeitige Notierung in zwei Währungen','Mischung aus Fonds und Aktie'],'Schuldverschreibung mit derivativer Struktur.'),
+MS('Typische Nachteile von Zertifikaten:',['Emittentenrisiko','Komplexe, schwer erfassbare Auszahlungsstruktur','Teilweise begrenzte Partizipation (Cap)','Margen des Emittenten im Preis'],['Kein Handel möglich','Fehlende Basiswerte'],'Chancen und Risiken immer gemeinsam betrachten.'),
+MC('Wer sorgt für die laufende Handelbarkeit von Zertifikaten?',['Der Emittent als Market Maker (Geld- und Briefkurse)','Die BaFin','Die Eurex','Der Anleger selbst'],'Zwischengeschaltet: QLP an der Euwax Stuttgart.')]},
+
+{t:'Index- & Discountzertifikat',cards:[
+card('Index-/Partizipationszertifikat',`<ul><li>Partizipation <b>1:1</b> an der Indexentwicklung (DAX, Euro Stoxx 50 …), meist <b>Open End</b></li><li><b>Bezugsverhältnis</b> (z. B. 1:100): Index 7.000 → Preis 70 €</li><li><b>Preisindex</b> (z. B. Euro Stoxx 50): Dividenden werden nicht berücksichtigt · <b>Performanceindex</b> (z. B. DAX): Dividenden reinvestiert</li><li><b>Quanto</b> = währungsgesichert · Spread klein bei großen Indizes</li><li>Erwartung: <b>steigend</b>; Risiko: fallende Kurse + Emittent</li></ul>`),
+card('Discountzertifikat',`<ul><li>Kauf <b>unter</b> dem Kurs des Basiswerts (<b>Discount</b>) – im Gegenzug <b>Cap</b> = Gewinnbegrenzung</li><li class="f">Discount = (Aktienkurs − Preis) ÷ Aktienkurs</li><li class="f">Max.-Rendite = (Cap − Preis) ÷ Preis (p. a. × 365/Tage)</li><li>Rückzahlung: Kurs ≥ Cap → <b>Cap</b>; Kurs &lt; Cap → <b>Basiswertkurs</b> (Cash) bzw. Aktienlieferung</li><li>Verlust erst, wenn Kurs unter dem <b>Einstiegspreis</b> – Discount ist ein begrenzter Puffer</li><li>Erwartung: <b>seitwärts / leicht steigend</b>; Laufzeit 3 M – 3 J</li></ul><p><i>Bsp.: Aktie 50, Cap 50, Preis 45 → Discount 10 %, Max.-Rendite 11,1 %</i></p>`)],
+qs:[
+NU('DAX-Zertifikat, Bezugsverhältnis 1:100, Indexstand 7.000. Preis des Zertifikats?',70,0,'€','7.000 × 0,01 = 70 €.'),
+MC('Welcher Index berücksichtigt Dividenden (Reinvestition)?',['Performanceindex (z. B. DAX)','Preisindex (z. B. Euro Stoxx 50)','Beide nicht','Nur Branchenindizes'],'Beim Preisindex fehlt die Dividende – wichtig für langfristige Anleger.'),
+NU('Aktie 50 €, Discountzertifikat 45 € (Cap 50 €). Discount in %?',10,0.01,'%','(50 − 45) ÷ 50 = 10 %.'),
+NU('Gleiche Daten, Laufzeit genau 1 Jahr: Maximalrendite in % (Cap 50 €, Preis 45 €)?',11.1,0.1,'%','(50 − 45) ÷ 45 = 11,1 %.'),
+NU('Discountzertifikat, Cap 50 €. Der Basiswert steht am Bewertungstag bei 55 €. Rückzahlung?',50,0,'€','Rückzahlung maximal der Höchstbetrag = Cap.'),
+NU('Gleiches Zertifikat (Preis 45 €), Basiswert am Bewertungstag bei 42 €. Rückzahlung?',42,0,'€','Rückzahlung = Basiswertkurs (42 €) → Verlust 3 € gegenüber Einstieg, aber weniger als bei der Aktie (−8 €).'),
+MC('Ab wann entsteht beim Discountzertifikat ein Verlust?',['Wenn der Basiswert am Bewertungstag unter dem Einstiegspreis des Zertifikats schließt','Sobald der Basiswert fällt','Sobald der Cap erreicht wird','Nie'],'Der Discount ist ein begrenzter Risikopuffer.'),
+MC('Welche Markterwartung passt zum Discountzertifikat?',['Seitwärts bis leicht steigend','Stark steigend','Stark fallend','Hohe Volatilität erwartet'],'Bei starkem Anstieg wirkt der Cap als Bremse.')]},
+
+{t:'Bonus & Express',cards:[
+card('Bonuszertifikat',`<ul><li>Bonuslevel + <b>Barriere</b> (kontinuierlich beobachtet)</li><li>Barriere <b>nie berührt</b> → mindestens <b>Bonusbetrag</b>, darüber <b>1:1</b> (kein Cap bei klassischen Bonus)</li><li>Barriere <b>berührt</b> → Bonus entfällt, Zertifikat verhält sich <b>wie der Basiswert (1:1)</b>, ohne Dividenden</li><li class="f">Abstand zur Barriere = (Kurs − Barriere) ÷ Kurs</li><li class="f">Seitwärtsrendite p. a. = (Bonus − Preis) ÷ Preis × 365/Tage</li></ul><p><i>Bsp.: Aktie 50, Bonus 60, Barriere 35, 2 Jahre → Abstand 30 %, Seitwärtsrendite 10 % p. a.</i></p><div class="tip">Je höher der Abstand zur Barriere, desto niedriger meist die Rendite.</div>`),
+card('Expresszertifikat',`<ul><li>An <b>Bewertungstagen</b>: Basiswert ≥ <b>Auszahlungslevel</b> → <b>vorzeitige Rückzahlung</b> = Nennwert + (kumulierte) <b>Express-Zahlung</b></li><li>Sonst läuft das Zertifikat weiter; Express-Zahlungen <b>kumulieren</b> (1075 → 1150 → 1225 bei 7,5 % p. a.)</li><li>Finaler Tag: ≥ Auszahlungslevel → Maximum · zwischen Barriere und Level → <b>Nennwert</b> · ≤ <b>Barriere</b> → prozentuale <b>Verluste wie Basiswert</b></li><li>Barriere nur am <b>finalen Bewertungstag</b> aktiv!</li><li>Maximalrendite bekannt, <b>keine</b> Teilnahme an Kursgewinnen/Dividenden</li><li>Erwartung: seitwärts / leicht steigend; Laufzeit 1–8 J.</li></ul>`)],
+qs:[
+NU('Aktie 50 €, Barriere 35 €. Abstand zur Barriere in %?',30,0.01,'%','(50 − 35) ÷ 50 = 30 %.'),
+NU('Bonuszertifikat: Preis 50 €, Bonusbetrag 60 €, Laufzeit 2 Jahre. Seitwärtsrendite p. a. in %?',10,0.01,'%','(60 − 50) ÷ 50 = 20 % in 2 Jahren → 10 % p. a.'),
+MC('Was passiert beim Bonuszertifikat, wenn die Barriere einmal verletzt wurde?',['Bonus entfällt – Zertifikat folgt dem Basiswert 1:1','Zertifikat verfällt wertlos','Bonus wird verdoppelt','Nichts'],'Auch eine kurzfristige Berührung genügt.'),
+TF('Beim Bonuszertifikat wird die Barriere während der gesamten Laufzeit beobachtet.',true,'Beim Expresszertifikat dagegen nur am finalen Bewertungstag.'),
+MC('Wann endet ein Expresszertifikat vorzeitig?',['Wenn der Basiswert an einem Bewertungstag auf/über dem Auszahlungslevel notiert','Wenn der Basiswert fällt','Wenn der Emittent es kündigt','Nach exakt 1 Jahr'],'Dann: Nennwert + Express-Zahlung(en).'),
+NU('Express: Nennwert 1.000 €, Express-Zahlung 7,5 % p. a. Das Auszahlungslevel wird erst am 3. (finalen) Tag erreicht. Auszahlung?',1225,0,'€','1.000 + 3 × 75 = 1.225 €.'),
+NU('Express: Nennwert 1.000 € (Einstieg Aktie 50 €), Barriere 30 €. Am finalen Tag steht die Aktie bei 28 €. Rückzahlung?',560,0,'€','Barriere verletzt → 1.000 × 28/50 = 560 € (−44 %).'),
+MC('Express: Aktie am finalen Tag zwischen Barriere und Auszahlungslevel (z. B. 37 €). Rückzahlung?',['Nennwert (1.000 €)','Nennwert + 3 Express-Zahlungen','Prozentualer Verlust wie Basiswert','0 €'],'Kapital zurück, aber keine Rendite.')]},
+
+{t:'Kapitalschutz, Outperformance, Sprint',cards:[
+card('Kapitalschutz-/Garantiezertifikat',`<ul><li>Aufbau: <b>Zerobond</b> (zahlt bei Fälligkeit das geschützte Kapital) + <b>Option(en)</b> für die Beteiligung</li><li><b>Teilschutz</b> z. B. 80 %</li><li>Schutz gilt <b>nur zum Laufzeitende</b> und <b>nur bei Zahlungsfähigkeit des Emittenten</b></li><li>Reagiert auf <b>Zinsen</b>: steigende Zinsen → Kurs ↓</li><li>Zielgruppe: sicherheitsorientiert</li></ul>`),
+card('Outperformance &amp; Sprint',`<ul><li><b>Outperformance:</b> ab dem <b>Basispreis</b> überproportional (Partizipationsfaktor z. B. 1,5), unterhalb <b>1:1</b>, keine Dividenden, <b>kein Cap</b><br><span class="f">Auszahlung = BP + PF × (Kurs − BP)</span><br><i>BP 50, PF 1,5, Kurs 60 → 65</i></li><li><b>Sprint:</b> wie Outperformance, aber mit <b>Cap</b> (Höchstbetrag)<br><span class="f">Höchstbetrag = BP + (Cap − BP) × PF</span><br><i>BP 50, Cap 60, PF 2 → 70 (Max.-Rendite 40 %)</i></li></ul>`)],
+qs:[
+MC('Aus welchen Bausteinen besteht ein Kapitalschutz-Zertifikat typischerweise?',['Zerobond + Option(en)','Aktie + Future','Pfandbrief + Aktie','Genussschein + Swap'],'Der Zerobond stellt das Kapital zur Fälligkeit sicher, die Differenz wird in Optionen angelegt.'),
+MC('Wo liegt das Hauptrisiko eines Kapitalschutz-Zertifikats?',['Schutz gilt nur zum Laufzeitende und nur bei Zahlungsfähigkeit des Emittenten','Totalverlust bei Kursrückgängen','Hebel auf Verluste','Margin-Nachschuss'],'Vorzeitiger Verkauf kann Verluste bringen; Emittentenrisiko bleibt.'),
+TF('Kapitalschutz-Zertifikate reagieren auf Zinsänderungen: steigende Zinsen lassen den Kurs tendenziell fallen.',true,'Wegen der Zerobond-Komponente.'),
+NU('Outperformance: Basispreis 50, Partizipationsfaktor 1,5, Basiswert bei 60. Auszahlung?',65,0,'€','50 + 1,5 × 10 = 65 €.'),
+NU('Sprint: Basispreis 50, Cap 60, PF 2. Höchstbetrag?',70,0,'€','50 + (60 − 50) × 2 = 70 €.'),
+NU('Gleicher Sprint: Basiswert am Bewertungstag bei 55 €. Auszahlung?',60,0,'€','50 + (55 − 50) × 2 = 60 €.'),
+MC('Outperformance-Zertifikat: Basiswert fällt unter den Basispreis. Dann …',['trägt der Anleger die Verluste 1:1','ist das Kapital geschützt','wird der Verlust verdoppelt','verfällt das Zertifikat'],'Ohne Schutzkomponente und ohne Dividenden.'),
+MA('Ordne Produkt und passende Markterwartung zu.',[['Outperformance','Deutlich steigend'],['Sprint','Moderat steigend'],['Kapitalschutz','Sicherheitsorientiert'],['Aktienanleihe','Seitwärts bis leicht steigend']],'Je mehr Chance, desto weniger Schutz.')]},
+
+{t:'Zertifikatetypen im Überblick',cards:[
+card('10 Typen auf einen Blick',`<table><tr><th>Typ</th><th>Laufzeit</th><th>Erwartung</th></tr><tr><td>Index/Tracker</td><td>meist Open End</td><td>steigend</td></tr><tr><td>Discount</td><td>6 M – 2 J</td><td>seitwärts / mäßig steigend</td></tr><tr><td>Bonus</td><td>1 – 5 J</td><td>seitwärts bis mäßig steigend</td></tr><tr><td>Express</td><td>3 – 6 J</td><td>seitwärts / leicht steigend</td></tr><tr><td>Kapitalschutz</td><td>mehrjährig</td><td>sicherheitsorientiert</td></tr><tr><td>Aktienanleihe</td><td>6 M – 2 J</td><td>neutral bis leicht steigend</td></tr><tr><td>Outperformance</td><td>1 – 4 J</td><td>deutlich steigend</td></tr><tr><td>Knock-Out</td><td>kurz / Open End</td><td>klar steigend/fallend (Profis)</td></tr><tr><td>Faktor</td><td>meist Open End</td><td>kurzfristiger Trend</td></tr><tr><td>Partizipation</td><td>befristet/Open End</td><td>steigend</td></tr></table>`),
+card('Zehn Spezifikationen',`<p>Basiswert · Emittent · Laufzeit · Bezugsverhältnis · Barriere · Cap · Bonuslevel · Partizipationsfaktor · Währung · Rückzahlungsprofil</p><div class="tip">Schon kleine Unterschiede (Barrierehöhe, Restlaufzeit, Emittent, Cap) verändern Chance, Risiko und Zielgruppe komplett.</div>`)],
+qs:[
+MA('Ordne Zertifikat und typische Laufzeit zu.',[['Index-Zertifikat','Häufig Open End'],['Discount','6 Monate – 2 Jahre'],['Bonus','1 – 5 Jahre'],['Express','3 – 6 Jahre']],'Laufzeit gehört zu den Pflichtangaben jedes Produkts.'),
+MC('Welche Markterwartung passt am besten zu einem Index-Zertifikat?',['Steigende Kurse','Seitwärts','Stark fallende Kurse','Keine'],'Volle Partizipation – nach oben wie nach unten.'),
+MS('Zu den zehn Spezifikationen eines Zertifikats gehören:',['Barriere','Cap','Bezugsverhältnis','Partizipationsfaktor'],['Dividendenrendite des Emittenten','Anzahl der Mitarbeiter'],'Spezifikationen bestimmen das Rückzahlungsprofil.'),
+MC('Welches Zertifikat zahlt bei intakter Barriere mindestens einen Bonusbetrag?',['Bonuszertifikat','Index-Zertifikat','Discountzertifikat','Faktorzertifikat'],'Bonus + Barriere = Seitwärtsrendite.'),
+MC('Welches Zertifikat kann vorzeitig zurückgezahlt werden?',['Expresszertifikat','Discountzertifikat','Indexzertifikat','Sprint'],'Bei Erreichen des Auszahlungslevels an Bewertungstagen.'),
+MC('Markterwartung „moderat fallend“ – welche Produkte können passen?',['Discount oder Bonus mit Puffer','Outperformance','Long-KO','Index-Zertifikat'],'Der Puffer hilft, schützt aber nicht unbegrenzt.')]}
+]});
+/* ============ UNIT 9 ============ */
+U({id:'u9',icon:'🚀',title:'Hebelprodukte & Risiken',sub:'Knock-Out · Faktor · Emittentenrisiko · Spread',lessons:[
+{t:'Hebelprodukte',cards:[
+card('Hebel &amp; Knock-Out',`<ul><li><b>Hebel</b> = Reaktion des Produkts relativ zum Basiswert &gt; 1 – wirkt in <b>beide</b> Richtungen</li><li><b>Long-Knock-Out:</b> Basispreis (Finanzierungslevel) + <b>KO-Schwelle</b>; Preis ≈ (Kurs − Basispreis) × Bezugsverhältnis; wird die Schwelle berührt, <b>verfällt</b> das Produkt (Totalverlust bzw. Restwert)</li><li class="f">Hebel ≈ Kurs Basiswert ÷ Preis (bei BV 1)</li><li><b>Faktor-Zertifikat:</b> <b>täglich</b> konstanter Hebel (2–10), <b>pfadabhängig</b>, in volatilen Seitwärtsphasen ungünstig, Preis kann gegen null laufen</li><li><b>Optionsscheine</b> (Call/Put): Hebel, aber Zeitwertverfall</li></ul><p><b>Anlage- vs. Hebelprodukte:</b> Anlage = Vermögensaufbau/Renditeoptimierung, moderates Risiko · Hebel = kurzfristige Spekulation, überproportionale Verluste bis Totalverlust.</p>`)],
+qs:[
+MC('Was geschieht bei einem Long-Knock-Out-Produkt, wenn die KO-Schwelle berührt wird?',['Es verfällt (Totalverlust bzw. Restwert)','Es wird verdoppelt','Es wird in ein Bonuszertifikat getauscht','Nichts'],'Genau deshalb sind KO-Produkte Hebelprodukte mit höchstem Risiko.'),
+NU('Long-KO: Aktie 50 €, Basispreis 45 €, Bezugsverhältnis 1. Hebel (Kurs ÷ Preis)?',10,0,'','Preis = 50 − 45 = 5 €; Hebel = 50 ÷ 5 = 10.'),
+NU('Hebelprodukt mit Hebel 5. Der Basiswert fällt um 12 %. Verlust des Produkts in % (näherungsweise)?',60,0.5,'%','5 × 12 % = 60 %.'),
+TF('Der Hebel wirkt nur bei steigenden Kursen.',false,'Hebel verstärkt Gewinne UND Verluste.'),
+MC('Faktor-Zertifikate …',['bilden die tägliche Wertentwicklung gehebelt ab (Pfadabhängigkeit)','garantieren das Kapital','haben keinen Hebel','sind steuerfrei'],'Bei volatilen Seitwärtsbewegungen entsteht ein negativer kumulativer Effekt.'),
+MC('Hebelprodukte eignen sich für …',['sehr erfahrene, risikobereite Anleger mit klarer kurzfristiger Meinung','sicherheitsorientierte Sparer','Altersvorsorge','Anleger ohne Verlusttragfähigkeit'],'Kurzfristige Spekulation/Trading.'),
+MC('Ein Hebelprodukt hat typischerweise einen Hebel …',['größer als 1','kleiner als 1','genau 1','von 0'],'Hebel < 1: Absicherung; = 1: Partizipation; > 1: Spekulation.')]},
+
+{t:'Risiken & Handel',cards:[
+card('Emittentenrisiko &amp; Spread',`<ul><li><b>Emittentenrisiko:</b> Zertifikate sind Schuldverschreibungen – bei Insolvenz kann das Produkt wertlos werden, <b>selbst wenn der Basiswert gut läuft</b>. Gegenmittel: Bonität prüfen, <b>Emittenten streuen</b>, Unterlagen lesen. Ein bekannter Name ist <b>keine</b> Sicherheit.</li><li><b>Geldkurs</b> = Ankauf durch den Market Maker (hier verkauft der Anleger) · <b>Briefkurs</b> = Verkauf durch den MM (hier kauft der Anleger)</li><li><b>Geld-Brief-Spanne</b> = Differenz → <b>indirekte Kosten</b> &amp; Liquiditätsindikator (Bsp. 99,20 / 100,00 → 0,80)</li></ul>`),
+card('6 Risiken im Überblick',`<table><tr><th>Risiko</th><th>Kern</th></tr><tr><td>Marktrisiko</td><td>Basiswert entwickelt sich ungünstig</td></tr><tr><td>Emittentenrisiko</td><td>Emittent fällt aus</td></tr><tr><td>Liquiditätsrisiko</td><td>Verkauf nur mit weitem Spread/gar nicht</td></tr><tr><td>Komplexitätsrisiko</td><td>Produktformel falsch verstanden</td></tr><tr><td>Währungsrisiko</td><td>Basiswert/Produkt in Fremdwährung (Quanto sichert ab)</td></tr><tr><td>Totalverlustrisiko</td><td>v. a. Hebel/KO/Barriereverletzung</td></tr></table>`)],
+qs:[
+MC('Warum haben Zertifikate neben dem Marktrisiko auch Emittentenrisiko?',['Sie sind Schuldverschreibungen und kein Sondervermögen','Weil sie Hebel haben','Weil sie börsennotiert sind','Weil sie Dividenden zahlen'],'Der Anleger gibt dem Emittenten wirtschaftlich Kredit.'),
+NU('Geldkurs 99,20 €, Briefkurs 100,00 €. Geld-Brief-Spanne in €?',0.8,0.001,'€','100,00 − 99,20 = 0,80 €.'),
+MC('Eine große Geld-Brief-Spanne bedeutet …',['höhere implizite Einstiegskosten / geringere Liquidität','geringere Kosten','höhere Dividende','kein Risiko'],'Besonders bei exotischen oder wenig liquiden Produkten relevant.'),
+MA('Ordne Risiko und Beschreibung zu.',[['Marktrisiko','Basiswert entwickelt sich ungünstig'],['Emittentenrisiko','Emittent kann nicht zahlen'],['Liquiditätsrisiko','Verkauf nur mit weitem Spread möglich'],['Währungsrisiko','Basiswert in Fremdwährung'],['Komplexitätsrisiko','Produktformel wird nicht verstanden']],'Die Risikoübersicht aus der GA 10.'),
+TF('Ein bekannter Bankname schützt zuverlässig vor Emittentenrisiko.',false,'Keine falsche Sicherheit durch bekannte Namen annehmen.'),
+MC('Wie lässt sich das Emittentenrisiko mindern?',['Bonität prüfen und Emittenten streuen','Nur Hebelprodukte kaufen','Nur Open-End-Produkte kaufen','Gar nicht'],'Diversifikation über mehrere Emittenten.'),
+MC('Zu welchem Kurs kauft ein Anleger ein Zertifikat vom Market Maker?',['Briefkurs','Geldkurs','Mittelkurs','Basispreis'],'Merke: Der Anleger kauft zum Brief (teurer) und verkauft zum Geld (billiger).')]}
+]});
+
+/* ============ UNIT 10 ============ */
+U({id:'u10',icon:'⚖️',title:'Regulierung & Dokumente',sub:'BaFin · MiFID · PRIIPs · EMIR · BIB · KoTra',lessons:[
+{t:'Aufsicht & Regelwerke',cards:[
+card('Aufsichtsbehörden',`<ul><li><b>BaFin</b> – Bundesanstalt für Finanzdienstleistungsaufsicht: Banken, Versicherer, Wertpapiermärkte in D</li><li><b>ESMA</b> – European Securities and Markets Authority: Wertpapier- &amp; Marktaufsicht (EU)</li><li><b>EBA</b> – European Banking Authority: Bankenaufsicht (EU)</li></ul>`),
+card('EU-Regelwerke',`<table><tr><th>Regelwerk</th><th>Kern</th></tr><tr><td><b>MiFID I</b> (seit 1.11.2007)</td><td>EU-Richtlinie über Märkte für Finanzinstrumente; Anlegerschutz, Wettbewerb, <b>Best Execution</b></td></tr><tr><td><b>MiFID II</b> (seit 3.1.2018, RL 2014/65/EU)</td><td>erweiterter Anlegerschutz, Kostentransparenz, <b>Geeignetheitserklärung</b>, Zielmarktabgleich, <b>Taping</b>, Äquivalenz-Check; ab 2.8.2022 Nachhaltigkeitsabfrage</td></tr><tr><td><b>MiFIR</b></td><td>direkt geltende <b>Verordnung</b>: Transparenz, Handelsplätze, Transaktionsmeldungen</td></tr><tr><td><b>PRIIPs</b></td><td>verpackte Anlageprodukte für Kleinanleger → <b>Basisinformationsblatt</b> (BIB/KID)</td></tr><tr><td><b>EMIR</b></td><td>Regulierung des Derivatehandels (OTC): Clearing, Meldung, Risikominderung</td></tr></table><p><b>RIS</b> (Retail Investment Strategy): Kleinanleger besser schützen, fair behandeln, Beteiligung fördern.</p>`)],
+qs:[
+MA('Ordne Abkürzung und Bedeutung zu.',[['BaFin','Deutsche Finanzaufsicht'],['ESMA','Europäische Wertpapier- und Marktaufsicht'],['EBA','Europäische Bankenaufsicht'],['EMIR','Regulierung des (OTC-)Derivatehandels']],'Nationale vs. europäische Ebene.'),
+MC('Seit wann gilt MiFID II?',['3. Januar 2018','1. November 2007','1. Januar 2022','2. August 2022'],'MiFID I: 1.11.2007. Nachhaltigkeitsabfrage: 2.8.2022.'),
+MC('MiFIR ist …',['eine direkt geltende EU-Verordnung (Transparenz, Handelsplätze, Transaktionsmeldungen)','eine nationale Aufsicht','ein Produktinformationsblatt','ein Beratungsprotokoll'],'Ergänzt die Richtlinie MiFID II.'),
+MC('PRIIPs verpflichtet Emittenten zur Bereitstellung …',['eines Basisinformationsblatts (BIB/KID)','eines Beratungsprotokolls','einer Bilanz','eines Ratings'],'Ziel: Vergleichbarkeit für Kleinanleger.'),
+MS('Was wurde mit MiFID II neu eingeführt/gestärkt?',['Telefonaufzeichnung („Taping“)','Geeignetheitsprüfung / -erklärung','Zielmarktabgleich','Äquivalenz-Check'],['Beratungsprotokoll','Verzicht auf Dokumentation'],'Das Beratungsprotokoll wurde ersetzt.'),
+MC('EMIR betrifft vor allem …',['OTC-Derivate (Clearing, Meldepflichten, Risikominderung)','Aktienemissionen','Bankeneigenkapital','Fondsprospekte'],'European Market Infrastructure Regulation.'),
+TF('MiFID II ist eine EU-Verordnung.',false,'MiFID II ist eine Richtlinie (2014/65/EU); die Verordnung dazu heißt MiFIR.')]},
+
+{t:'Dokumente & Kostentransparenz',cards:[
+card('Wichtige Abkürzungen',`<table><tr><th>Begriff</th><th>Bedeutung</th></tr><tr><td><b>ISIN</b></td><td>International Securities Identification Number – eindeutige internationale Wertpapierkennnummer</td></tr><tr><td><b>KIID / WAI</b></td><td>Key Investor Information Document / Wesentliche Anlegerinformationen – aus der <b>Fonds-/OGAW-Welt</b></td></tr><tr><td><b>PIB</b></td><td>Produktinformationsblatt – standardisierte Kurzinfo im Beratungskontext</td></tr><tr><td><b>BIB</b></td><td>Basisinformationsblatt (PRIIPs-KID): Produktart, <b>Risikoindikator</b>, <b>Szenarien</b>, <b>Kosten</b>, <b>empfohlene Haltedauer</b></td></tr><tr><td><b>KoTra</b></td><td>Kostentransparenz</td></tr></table>`),
+card('Ex-ante / Ex-post',`<ul><li><b>Ex-ante</b> = <b>vor</b> Abschluss: erwartete Produkt- &amp; Dienstleistungskosten und deren Renditewirkung</li><li><b>Ex-post</b> = <b>nachträglich</b>: tatsächlich angefallene Kosten (für einen vergangenen Zeitraum)</li></ul>`)],
+qs:[
+MA('Ordne Dokument und Bedeutung zu.',[['ISIN','Internationale Wertpapierkennnummer'],['KIID / WAI','Wesentliche Anlegerinformationen (Fonds)'],['PIB','Produktinformationsblatt'],['BIB','Basisinformationsblatt (PRIIPs)']],'Alle dienen der Anlegerinformation.'),
+MS('Was zeigt das Basisinformationsblatt (BIB)?',['Produktart','Risikoindikator','Szenarien','Kosten und empfohlene Haltedauer'],['Das Rating der Hausbank','Die Einkommensteuer des Anlegers'],'Standardisiert für Vergleichbarkeit.'),
+MC('Ex-ante-Kosteninformation bedeutet …',['Kosten werden vor Vertragsabschluss offengelegt','Kosten werden nach Ablauf eines Jahres mitgeteilt','Kosten fallen weg','Kosten sind verhandelbar'],'Ex-post: tatsächlich angefallene Kosten nachträglich.'),
+TF('KIID/WAI stammt ursprünglich aus der Welt der Investmentfonds (OGAW).',true,'Für PRIIPs gilt das BIB.'),
+MC('KoTra steht im Wertpapierkontext für …',['Kostentransparenz','Kontrahententransparenz','Kapitaltransfer','Kurstransparenz'],'Kosten-/Nebenkosten müssen für Kunden erkennbar sein.'),
+OR('Bringe den Beratungsablauf mit Dokumenten in die richtige Reihenfolge.',['Kundenprofil erfassen (Ziele, Kenntnisse, Verlusttragfähigkeit)','Produktauswahl & Zielmarktabgleich','Geeignetheitserklärung, BIB/PIB und ex-ante-Kosten aushändigen','Geschäftsabschluss','Ex-post-Kosteninformation / Nachbetreuung'],'Geeignetheitserklärung & Kosten kommen VOR dem Abschluss.')]},
+
+{t:'Geeignetheitserklärung',cards:[
+card('Beratungsprotokoll → Geeignetheitserklärung',`<table><tr><th></th><th>Beratungsprotokoll</th><th>Geeignetheitserklärung</th></tr><tr><td>Seit</td><td>bis 2.1.2018</td><td><b>3.1.2018</b> (MiFID II)</td></tr><tr><td>Inhalt</td><td>Dokumentation des <b>Gesprächsverlaufs</b></td><td>einseitige <b>Erklärung der Bank</b>, warum die Empfehlung geeignet ist</td></tr><tr><td>Unterschrift</td><td>ja</td><td><b>keine</b> (weder Kunde noch Berater)</td></tr><tr><td>Zeitpunkt</td><td>–</td><td>vor (!) Geschäftsabschluss (Ausnahme: Telefonberatung)</td></tr></table>`),
+card('Unverändert vs. ergänzt',`<p><b>Unverändert:</b> für jede Anlageberatung mit Privatkunden · auch ohne Geschäftsabschluss · <b>keine Verzichtsmöglichkeit</b> · vor Abschluss auszuhändigen</p><p><b>Neu:</b> <b>Zielmarktabgleich</b> (Produkt- vs. Kundenzielmarkt) · ex-ante-KoTra &amp; ex-post-Mitteilung · PIBs inkl. neuer KIDs für PRIIPs</p>`)],
+qs:[
+MC('Was ersetzt die Geeignetheitserklärung seit 3.1.2018?',['Das Beratungsprotokoll','Das Produktinformationsblatt','Die Risikoaufklärung','Das KIID'],'Im Zuge von MiFID II.'),
+TF('Die Geeignetheitserklärung muss vom Kunden unterschrieben werden.',false,'Keine Unterschrift notwendig – weder vom Kunden noch vom Berater.'),
+MC('Wann ist die Geeignetheitserklärung zu erstellen?',['Vor dem Geschäftsabschluss (Ausnahme: Telefonberatung)','Nach dem Abschluss','Nur bei Verlusten','Nur auf Kundenwunsch'],'Der Kunde muss sie vorher erhalten.'),
+MS('Was bleibt gegenüber dem Beratungsprotokoll unverändert?',['Gilt für jede Anlageberatung mit Privatkunden','Auch ohne Geschäftsabschluss','Keine Verzichtsmöglichkeit'],['Kundenunterschrift ist Pflicht','Dokumentation jedes Gesprächsdetails'],'Die Pflicht bleibt, die Form ändert sich.'),
+MS('Was wird ergänzt?',['Zielmarktabgleich','Ex-ante-KoTra und ex-post-Mitteilung','PIBs inkl. KIDs für PRIIPs'],['Pflicht zur Kundenunterschrift','Verzicht auf Beratung'],'MiFID-II-Erweiterungen.'),
+MC('Worin liegt der Hauptunterschied zwischen Beratungsprotokoll und Geeignetheitserklärung?',['Protokoll dokumentiert den Gesprächsverlauf, die Erklärung ist eine einseitige Erklärung der Geeignetheit durch die Bank','Es gibt keinen','Das Protokoll ist kürzer','Die Erklärung gilt nur für Fonds'],'Eignung steht im Mittelpunkt.'),
+MC('Seit wann ist die Abfrage von Nachhaltigkeitspräferenzen in jeder Anlageberatung Pflicht?',['2. August 2022','3. Januar 2018','1. November 2007','1. Januar 2025'],'Teil des EU-Aktionsplans zur Finanzierung nachhaltigen Wachstums.')]}
+]});
+
+/* ============ UNIT 11 ============ */
+U({id:'u11',icon:'🤝',title:'Anlageberatung in der Praxis',sub:'Fünfeck · Asset Allocation · WpHG · Behavioral Finance',lessons:[
+{t:'Fünfeck & Asset Allocation',cards:[
+card('Magisches Fünfeck der Geldanlage',`<p><b>Rentabilität · Sicherheit · Liquidität · steuerliche Vorteile · ethische Gesichtspunkte (Nachhaltigkeit)</b> – die Ziele stehen im <b>Zielkonflikt</b> (z. B. Rendite vs. Sicherheit).</p>`),
+card('Asset Allocation &amp; Investmentprozess',`<ul><li><b>Asset Allocation</b> ist der wichtigste Einflussfaktor auf den Anlageerfolg; Einzeltitelauswahl und Timing zusammen nur ca. <b>8 %</b> (Brinson/Hood/Beebower)</li><li><b>Strategisch</b> = langfristige Grundstruktur · <b>taktisch</b> = kurzfristige Anpassungen</li><li><b>Aktiv</b> (Stock Picking, Market Timing, Ziel: Outperformance, höhere Kosten) vs. <b>passiv</b> (ETF, Marktrendite, niedrige Kosten)</li><li>Diversifikation: Portfoliorisiko ≠ Summe der Einzelrisiken</li></ul><p><b>Prozess:</b> Zieldefinition → Asset Allocation → Portfoliokonstruktion → Umsetzung → Monitoring &amp; Rebalancing → Performancemessung</p>`)],
+qs:[
+MS('Welche Ziele bilden das magische Fünfeck der Geldanlage?',['Rentabilität','Sicherheit','Liquidität','Steuerliche Vorteile','Ethische/nachhaltige Gesichtspunkte'],['Prestige','Mobilität'],'Früher „magisches Dreieck“ (Rentabilität, Sicherheit, Liquidität), heute fünf Ecken.'),
+MC('Was ist laut Brinson/Hood/Beebower der wichtigste Einflussfaktor auf die Depot-Performance?',['Die Asset Allocation','Das Timing','Die Einzeltitelauswahl','Die Depotgebühr'],'Einzeltitelauswahl + Timing zusammen nur ca. 8 %.'),
+MC('Strategische Asset Allocation bedeutet …',['langfristige Grundstruktur aus Risikoprofil und Kapitalmarktannahmen','kurzfristige Chancennutzung','tägliches Trading','Verzicht auf Diversifikation'],'Taktisch = kurzfristige Anpassungen.'),
+MC('Passives Management …',['bildet den Markt (Index) nach – stabile Rendite, niedrige Kosten','versucht die Benchmark zu schlagen','nutzt Stock Picking','ist teurer als aktives'],'Instrument: Indexfonds/ETF.'),
+OR('Bringe den Investmentprozess in die richtige Reihenfolge.',['Zieldefinition','Asset Allocation','Portfoliokonstruktion','Umsetzung','Monitoring & Rebalancing','Performancemessung'],'Von der Zielsetzung bis zur Erfolgskontrolle.'),
+TF('Das Portfoliorisiko ist die Summe der Einzelrisiken.',false,'Durch Diversifikation kann das Risiko sinken, ohne dass die Rendite proportional sinkt.'),
+MC('Welcher Zielkonflikt besteht typischerweise?',['Rendite vs. Sicherheit','Liquidität vs. Rendite ist irrelevant','Steuern vs. Dividende','Kein Konflikt'],'Je höher die erwartete Rendite, desto höher meist das Risiko.')]},
+
+{t:'Beratung nach WpHG',cards:[
+card('Anleger- &amp; objektgerechte Beratung',`<ul><li><b>Anlegergerecht:</b> passt zu Kenntnissen, Erfahrungen, Zielen und finanziellen Verhältnissen des Kunden</li><li><b>Objektgerecht:</b> passt zu den Eigenschaften des Produkts (Risiken, Chancen)</li><li>WpHG-<b>Wohlverhaltensregeln</b> (§§ 31–37 alt)</li><li>Jedem Kunden ist ein <b>Anlegerprofil</b> (Risiko-/Produktklassen) zuzuordnen</li></ul>`),
+card('Risikoaufklärung',`<p>Zu dokumentieren u. a.:</p><ul><li><b>Anlagekenntnisse / -erfahrungen</b></li><li><b>Finanzielle Verhältnisse</b></li><li><b>Anlegermentalität, Anlagestrategie, Anlagedauer</b></li><li>Dokumentation der <b>ausgehändigten Unterlagen</b> (Basisinformationen)</li></ul><div class="tip"><b>Tipp:</b> Das Gespräch nie als Gesetzeszwang „verkaufen“, sondern als aktive Beratungsunterstützung und Cross-Selling-Hilfe.</div>`)],
+qs:[
+MC('Was bedeutet „anlegergerechte“ Beratung?',['Das Produkt passt zu Zielen, Erfahrung und finanzieller Situation des Kunden','Das Produkt hat ein gutes Rating','Das Produkt ist günstig','Das Produkt ist neu'],'Objektgerecht dagegen betrifft das Produkt selbst.'),
+MS('Welche Kundenangaben werden für die Risikoaufklärung erhoben?',['Anlagekenntnisse und -erfahrungen','Finanzielle Verhältnisse','Anlegermentalität, -strategie und -dauer'],['Provisionsziel des Beraters','Lieblingsemittent der Bank'],'Grundlage für Anlegerprofil und Geeignetheit.'),
+TF('Jedem Kunden ist ein Anlegerprofil zuzuordnen (Risiko-/Produktklassen).',true,'Meist per EDV-Eingabe.'),
+MC('Wie sollte der Berater das Risikoaufklärungsgespräch laut Vorlesung verstehen?',['Als aktive Beratungsunterstützung und Cross-Selling-Hilfe','Als lästige Pflicht','Als reine Haftungsabsicherung','Als Verkaufshindernis'],'Wir unterstützen den Kunden aktiv und ganzheitlich.'),
+MC('Wie ist die Dokumentation ausgehändigter Basisinformationen zu behandeln?',['Sie ist zu dokumentieren','Sie ist freiwillig','Sie entfällt bei Zertifikaten','Sie erfolgt nur mündlich'],'Teil der vorgeschriebenen Dokumentation.'),
+MC('Welche Motive hat ein Privatkunde für Finanztermingeschäfte?',['Hedging, Spekulation, Arbitrage','Nur Steuern sparen','Nur Dividenden','Nur Kapitalschutz'],'Sicherungs-, Spekulations- und Arbitrageinstrument.')]},
+
+{t:'Behavioral Finance',cards:[
+card('Homo Oeconomicus vs. Behavioral Finance',`<table><tr><th></th><th>Homo Oeconomicus</th><th>Behavioral Finance</th></tr><tr><td>Menschenbild</td><td>vollständig rational</td><td>beschränkt rational</td></tr><tr><td>Märkte</td><td>effizient</td><td>können ineffizient sein</td></tr><tr><td>Verhalten</td><td>ohne Emotionen</td><td>Heuristiken &amp; Biases</td></tr></table>`),
+card('Typische Biases',`<ul><li><b>Verlustaversion:</b> Verluste wiegen psychologisch stärker als gleich hohe Gewinne</li><li><b>Overconfidence:</b> Überschätzung des eigenen Wissens/der Kontrolle</li><li><b>Herding:</b> Herdenverhalten statt Fundamentaldaten</li><li><b>Anchoring:</b> Fixierung auf einen Referenzwert (Anker)</li><li><b>Mental Accounting:</b> gedanklich getrennte „Konten“</li><li><b>Recency Bias:</b> jüngste Ereignisse überbewertet</li><li><b>Confirmation Bias:</b> nur bestätigende Informationen</li><li><b>Framing:</b> Entscheidung hängt von der Darstellung ab</li></ul>`)],
+qs:[
+MA('Ordne den Bias zu.',[['Verlustaversion','Verluste wiegen stärker als gleich hohe Gewinne'],['Overconfidence','Überschätzung des eigenen Wissens'],['Herding','Man folgt der Masse'],['Anchoring','Fixierung auf einen Referenzwert'],['Mental Accounting','Gedanklich getrennte Konten'],['Recency Bias','Jüngste Ereignisse überbewertet']],'Sechs der acht Standard-Biases.'),
+MC('Ein Kunde liest nur Artikel, die seine Kaufentscheidung bestätigen. Das ist …',['Confirmation Bias','Framing','Herding','Verlustaversion'],'Selektive Informationsaufnahme.'),
+MC('Der Framing-Effekt besagt …',['Entscheidungen hängen davon ab, wie Informationen dargestellt werden','Bilder verbessern die Rendite','Märkte sind effizient','Preise folgen Fundamentaldaten'],'„90 % Überlebenschance“ vs. „10 % Sterberisiko“.'),
+MC('Ein Kunde kauft eine Aktie, weil „alle Kollegen“ sie kaufen. Das ist …',['Herding','Anchoring','Recency Bias','Mental Accounting'],'Herdenverhalten.'),
+MC('Behavioral Finance unterstellt …',['beschränkt rationale Anleger mit systematischen Entscheidungsfehlern','vollständig rationale Anleger','effiziente Märkte','keine Emotionen'],'Gegenentwurf zum Homo Oeconomicus.'),
+TF('Der klassische Homo Oeconomicus trifft Anlageentscheidungen emotional.',false,'Er ist vollständig rational, nutzenmaximierend und ohne Emotionen.')]}
+]});
+
+/* ============ KARTEIKARTEN ============ */
+[
+['Wertpapier','Urkunde, in der ein privates Vermögensrecht verkörpert ist; zur Geltendmachung ist der Besitz erforderlich.'],
+['3 Funktionen des Wertpapiers','Legitimation · Transport (Übertragbarkeit) · Publizität.'],
+['Inhaberpapier','Übertragung durch Einigung + Übergabe (z. B. Inhaberanleihe).'],
+['Orderpapier','Übertragung durch Indossament + Übergabe (z. B. Wechsel).'],
+['Namenspapier (Rekta)','Übertragung durch Abtretung (Zession), z. B. Namensschuldverschreibung.'],
+['Finanzinstrument','Weiter, aufsichtsrechtlicher Begriff (§ 2 WpHG): Wertpapiere, Geldmarktinstrumente, Derivate, Investmentanteile …; Zahlungsinstrumente zählen nicht dazu.'],
+['Kassamarkt','Erfüllung innerhalb von 2 Börsentagen (T+2).'],
+['Terminmarkt','Vereinbarung heute, Erfüllung später (Eurex, EUWAX, OTC).'],
+['Unbedingtes Termingeschäft','Feste Verpflichtung beider Seiten: Future, Forward, Swap.'],
+['Bedingtes Termingeschäft','Wahlrecht für eine Seite: Optionen.'],
+['Derivat','Abgeleitetes Finanzinstrument, dessen Wert vom Basiswert (Underlying) abhängt (§ 2 WpHG).'],
+['Motive für Derivate','Hedging · Spekulation · Arbitrage.'],
+['Xetra-Handelszeit','09:00 – 17:30 Uhr.'],
+['Skontroführer','Früher „amtlicher Kursmakler“ (seit 1.7.2002); Spezialist = Skontroführer in Frankfurt.'],
+['Designated Sponsor','Betreuer in Xetra – stellt verbindliche Geld-/Briefkurse.'],
+['QLP','Quality Liquidity Provider – Derivatehandel Euwax Stuttgart (seit 2007).'],
+['Einheitskurs','Einmal täglich festgestellter Kurs bei größtmöglichem Umsatz.'],
+['Eurex','Computerbörse für Kontrakte (Optionen & Futures), CCP-Clearing, Margin, Laufzeit 1–84 Monate.'],
+['Nennwertaktie / Stückaktie','Nennwert ≥ 1 € / gleicher Anteil am Grundkapital (unechte nennwertlose Aktie).'],
+['Quotenaktie','Echte nennwertlose Aktie – in Deutschland nicht zugelassen.'],
+['Vinkulierte Namensaktie','Übertragung nur mit Zustimmung der Gesellschaft.'],
+['Kapitalerhöhung gegen Einlagen','§§ 182–191 AktG – Bezugsrecht der Altaktionäre.'],
+['Bedingte Kapitalerhöhung','§§ 192–201 AktG – WSV, Unternehmenszusammenschluss, Mitarbeiteroptionen; max. 50 % GK; 75 %-HV.'],
+['Genehmigtes Kapital','§§ 202–206 AktG – Vorstand ermächtigt, 5 Jahre, max. 50 % GK.'],
+['Kapitalerhöhung aus Gesellschaftsmitteln','§§ 207–220 AktG – Passivtausch, Gratisaktien.'],
+['Bookbuilding','Preisspanne, Investoren geben Gebote ins Orderbuch ab.'],
+['Auktionsverfahren (Emission)','Niedrigstes noch zum Zuge kommendes Gebot bestimmt den Zuteilungspreis.'],
+['KGV','Kurs ÷ Gewinn je Aktie (Ø in D ≈ 16).'],
+['Dividendenrendite','Dividende je Aktie ÷ Aktienkurs.'],
+['Bilanzkurs','Bilanzieller Substanzwert (Eigenkapital je Aktie).'],
+['Technische Analyse','Chart-/Trendanalyse – beantwortet „Wann?“, nicht „Wie viel ist die Aktie wert?“.'],
+['Sentiment-Index','Stimmungsmaß; oft Kontraindikator (Euphorie → Top, Angst → Boden).'],
+['Tenderverfahren (Bund)','Amerikanisch: individueller Preis · Niederländisch: einheitlicher Preis (marginales Gebot).'],
+['Bundesschatzanweisung / -obligation / -anleihe','2 Jahre / 5 Jahre / 10 oder 30 Jahre.'],
+['Pfandbrief','Besichert durch Deckungsstock – doppelter Rückgriff (Bank + Sicherheitenpool).'],
+['AT1-Anleihe','Hybrid zwischen EK und FK, Verlustbeteiligung, sehr hohes Risiko.'],
+['Investment Grade','Rating ab BBB- (S&P/Fitch) bzw. Baa3 (Moody’s) und besser.'],
+['High Yield','Spekulative Anleihen (ab BB+/Ba1 abwärts) mit hohem Credit Spread.'],
+['Credit Spread','Rendite Corporate Bond − risikoloser Zins; kompensiert Ausfall- und Liquiditätsrisiko.'],
+['Yield to Maturity (YTM)','Interner Zinsfuß einer Anleihe: MW = Σ CF/(1+R)^t.'],
+['Nullkuponzinssatz','Zinssatz für genau einen Zeitpunkt (Zerobondrendite) – eindeutiger Barwert.'],
+['Macaulay-Duration','Durchschnittliche Kapitalbindungsdauer: Σ t·PV(CF)/MW. Zerobond: D = Laufzeit.'],
+['Modified Duration','MD = D/(1+R). ΔMW/MW ≈ −MD·ΔR.'],
+['Kritik Modified Duration','Horizontale Zinskurve, nur Parallelverschiebung, Approximationsfehler.'],
+['Genussschein','Zwitterpapier: Vermögensrechte ohne Stimmrecht; FK- (Prozentnotiz) oder EK-Charakter (Stücknotiz, nachrangig).'],
+['ETF','Börsengehandelter, passiver Indexfonds; Sondervermögen; Kosten ca. 0,15–0,7 % p. a.'],
+['Wandelschuldverschreibung (WSV)','Anleihe + Umtauschrecht in Aktien; Anleihe erlischt bei Wandlung; ¾-HV; bedingte Kapitalerhöhung; Passivtausch.'],
+['Optionsanleihe (OA)','Anleihe + Optionsschein; Forderung bleibt nach Ausübung bestehen; cum/ex.'],
+['Wertuntergrenze Wandelanleihe','Max(Anleihewert; Wandlungswert).'],
+['Zerobond','Keine Kupons; Emissionskurs unter pari; hohe Hebelwirkung; Steuer erst bei Zufluss.'],
+['FRN','Floating Rate Note: Referenzzins + Aufschlag; Kurs nahe pari.'],
+['Reverse Floater','Zins sinkt bei steigenden Marktzinsen – Erwartung fallender Zinsen.'],
+['Aktienanleihe','Anleihe + Short Put; Rückzahlung Nominal oder Aktienlieferung (Wahlrecht des Emittenten).'],
+['Future','Unbedingtes Termingeschäft: Verpflichtung zu Kauf (long)/Verkauf (short) zum Terminpreis.'],
+['Call / Put','Recht zu kaufen / zu verkaufen zum Basispreis.'],
+['Stillhalter','Verkäufer einer Option – hat die Pflicht, erhält die Prämie.'],
+['Amerikanische / Europäische Option','Jederzeit ausübbar / nur am Laufzeitende.'],
+['Innerer Wert (Call)','Aktienkurs − Basispreis (min. 0).'],
+['Aufgeld, Hebel, Break-even (OS)','(OS+BP−Kurs)/Kurs · Kurs/OS-Preis · Basispreis + Optionspreis.'],
+['Zinsswap','Tausch fester gegen variable Zinszahlungen; Payer zahlt fest.'],
+['Zertifikat','Strukturierte Inhaberschuldverschreibung; kein Sondervermögen → Emittentenrisiko.'],
+['Index-Zertifikat','1:1-Partizipation, meist Open End; Bezugsverhältnis; Preis- vs. Performanceindex.'],
+['Discountzertifikat','Kauf mit Abschlag, Gewinn durch Cap begrenzt; Erwartung seitwärts/leicht steigend.'],
+['Bonuszertifikat','Bonus bei intakter Barriere (laufend beobachtet); nach Bruch wie Basiswert 1:1.'],
+['Expresszertifikat','Vorzeitige Rückzahlung bei Auszahlungslevel; Barriere nur am finalen Tag.'],
+['Kapitalschutzzertifikat','Zerobond + Option; Schutz nur zum Laufzeitende und bei Emittentenbonität.'],
+['Outperformancezertifikat','Ab Basispreis überproportional (PF > 1), unterhalb 1:1, kein Cap.'],
+['Sprintzertifikat','Wie Outperformance mit Cap: Höchstbetrag = BP + (Cap − BP) × PF.'],
+['Knock-Out-Produkt','Hebel; bei Berühren der KO-Schwelle Verfall (Totalverlust).'],
+['Faktor-Zertifikat','Täglich konstanter Hebel; pfadabhängig.'],
+['Geld-Brief-Spanne','Differenz zwischen Ankaufs- und Verkaufskurs – indirekte Kosten.'],
+['BaFin','Bundesanstalt für Finanzdienstleistungsaufsicht.'],
+['ESMA / EBA','Europäische Wertpapier- und Marktaufsicht / Europäische Bankenaufsicht.'],
+['MiFID I / II','EU-Richtlinie über Märkte für Finanzinstrumente – 1.11.2007 / 3.1.2018.'],
+['MiFIR','Direkt geltende EU-Verordnung: Transparenz, Handelsplätze, Transaktionsmeldungen.'],
+['PRIIPs','Verpackte Anlageprodukte für Kleinanleger → Basisinformationsblatt (BIB).'],
+['EMIR','Regulierung des OTC-Derivatehandels (Clearing, Meldung, Risikominderung).'],
+['ISIN','Internationale Wertpapierkennnummer.'],
+['KIID / WAI','Wesentliche Anlegerinformationen (Fonds/OGAW).'],
+['PIB / BIB','Produktinformationsblatt / Basisinformationsblatt.'],
+['KoTra, ex-ante, ex-post','Kostentransparenz; Kosten vor Abschluss / tatsächliche Kosten nachträglich.'],
+['Geeignetheitserklärung','Ersetzt seit 3.1.2018 das Beratungsprotokoll; einseitige Erklärung der Bank; keine Unterschrift; vor Abschluss.'],
+['Taping','Aufzeichnung von Telefongesprächen zur Anlageberatung (MiFID II).'],
+['Zielmarktabgleich','Abgleich Produktzielmarkt vs. Kundenzielmarkt.'],
+['Äquivalenz-Check','Prüfung bei Umschichtungen, ob Nutzen die Kosten rechtfertigt.'],
+['Magisches Fünfeck','Rentabilität · Sicherheit · Liquidität · Steuern · Ethik/Nachhaltigkeit.'],
+['Asset Allocation','Wichtigster Einflussfaktor des Anlageerfolgs (Einzeltitel + Timing ≈ 8 %).'],
+['Verlustaversion','Verluste wiegen psychologisch stärker als gleich hohe Gewinne.']
+].forEach(x=>FLASH.push(x));
+
+/* ============ BERATUNGSFÄLLE ============ */
+SCEN.push(
+SC('<b>Lena (26)</b>, Berufsanfängerin, will 100 €/Monat über 25+ Jahre für die Altersvorsorge anlegen. Erwartung: langfristig steigende Märkte. Sie möchte breit gestreut investieren und nichts selbst auswählen.','Welcher Vorschlag passt am besten?',['Breit gestreuter Index-ETF bzw. Index-Zertifikat (Open End) als Sparplan','Long-Knock-Out-Produkt auf den DAX','Aktienanleihe auf eine Einzelaktie','Optionsschein auf Bitcoin'],'Langfristiger Vermögensaufbau, Diversifikation, einfache Partizipation. ETF (Sondervermögen) hat zusätzlich den Bonitätsvorteil.'),
+SC('<b>Herr Meier (55)</b> erwartet, dass die Aktie der XYZ AG in den nächsten 12 Monaten seitwärts läuft. Er möchte laufend einen attraktiven Kupon und akzeptiert notfalls die Lieferung von Aktien.','Welches Produkt passt?',['Aktienanleihe','Kapitalschutz-Zertifikat','Long-Faktor-Zertifikat','Outperformance-Zertifikat'],'Aktienanleihe: hoher Kupon, dafür Aktienandienungsrisiko bei Kursverlusten.'),
+SC('<b>Frau Schulz (45)</b>: Aktie notiert bei 50 €. Sie erwartet leicht steigende bis seitwärts laufende Kurse über 2 Jahre, aber keinen Rückgang um mehr als 30 %. Bei starkem Anstieg will sie voll dabei sein.','Welches Produkt?',['Bonuszertifikat (Barriere ≈ 35 €)','Discountzertifikat','Short-KO','Kapitalschutz-Zertifikat'],'Bonus + Barriere: Rendite im Seitwärtsmarkt, volle Teilnahme darüber (kein Cap), Risiko Barrierebruch.'),
+SC('<b>Herr Klein (62)</b>, sehr sicherheitsorientiert. Er möchte nach 5 Jahren sein eingesetztes Kapital zurück, aber mit Chance auf Aktienmarktgewinne.','Welches Produkt kommt in Betracht?',['Kapitalschutz-Zertifikat (100 %)','Express-Zertifikat mit niedriger Barriere','Long-Knock-Out','Faktor-Zertifikat'],'Kapitalschutz zum Laufzeitende – aber nur bei Zahlungsfähigkeit des Emittenten (Emittentenrisiko!).'),
+SC('<b>Tim (31)</b>, erfahrener Trader mit klarer kurzfristiger Erwartung: Der DAX steigt in den nächsten Tagen kräftig. Er kennt das Totalverlustrisiko und hat Verlusttragfähigkeit.','Welches Instrument ist (bei bestehender Eignung) denkbar?',['Long-Knock-Out-Produkt','Kapitalschutz-Zertifikat','Index-Zertifikat Open End als Sparplan','Pfandbrief'],'Hebelprodukte – nur für erfahrene, risikobereite Anleger mit kurzfristiger Meinung.'),
+SC('<b>Frau Berger (78)</b>, Rentnerin, geringe Risikotragfähigkeit, wünscht „etwas mit Hebel, da muss richtig was gehen“.','Wie verhält sich ein Berater regelkonform?',['Auf Basis der Geeignetheitsprüfung abraten bzw. geeignete Alternativen vorschlagen','Verkaufen, weil der Kunde es wünscht','Verkaufen und Unterschrift auf Verzicht einholen','Eine Wandelanleihe empfehlen, weil sie „sicher“ ist'],'Die Geeignetheit ist zu prüfen und zu erklären; ein Verzicht ist nicht möglich.'),
+SC('<b>Herr Wolf (40)</b> erwartet für eine Aktie (Kurs 50 €) leicht steigende oder seitwärts laufende Kurse. Er will die Aktie „günstiger“ kaufen und nimmt einen begrenzten Gewinn in Kauf.','Welches Zertifikat?',['Discountzertifikat (Cap ≈ 50 €)','Outperformance-Zertifikat','Reverse-Bonus','Faktor-Zertifikat'],'Discount: Abschlag als Puffer, Gewinn durch Cap begrenzt.'),
+SC('<b>Dr. Hahn (38)</b> ist überzeugt, der Markt steigt deutlich. Er will überproportional profitieren und akzeptiert Verluste 1:1 bei Kursrückgängen.','Welches Produkt?',['Outperformance-Zertifikat','Discountzertifikat','Kapitalschutz-Zertifikat','Expresszertifikat'],'Überproportionale Teilnahme ab dem Basispreis, ohne Schutzkomponente.'),
+SC('<b>Anna (50)</b> ruft an. Sie möchte telefonisch ein Zertifikat kaufen. Berater führt eine Anlageberatung durch.','Wann ist die Geeignetheitserklärung zu übermitteln?',['Grundsätzlich vor Geschäftsabschluss – bei Telefonberatung ist eine zeitnahe Übermittlung danach als Ausnahme möglich','Nie, wenn Kunde nicht unterschreibt','Erst nach einem Jahr','Nur bei Verlusten'],'Die Geeignetheitserklärung ist vor Abschluss zu erstellen und dem Kunden zur Verfügung zu stellen (Ausnahme: Telefonberatung).'),
+SC('<b>Herr Roth</b> besitzt ein Zertifikat mit 100 % Kapitalschutz und fragt: „Dann kann mir doch gar nichts passieren – auch wenn die Bank pleitegeht?“','Was ist die richtige Antwort?',['Der Schutz gilt nur zum Laufzeitende und nur, solange der Emittent zahlungsfähig ist','Ja, der Staat haftet','Ja, über die Einlagensicherung','Nein, der Schutz gilt nur für Aktien'],'Zertifikate sind Schuldverschreibungen ohne Sondervermögen – Emittentenrisiko bleibt.'),
+SC('<b>Eine AG</b> hat aktuell niedrige Aktienkurse und möchte sich günstig Fremdkapital besorgen, evtl. später Eigenkapital – ohne sofortige Kapitalerhöhung.','Welches Instrument kommt in Betracht?',['Wandelschuldverschreibung','Genussschein mit FK-Charakter','Zerobond','Discountzertifikat'],'WSV: günstiger Zins (1–2 % unter Marktzins), später Passivtausch FK → EK (bedingte Kapitalerhöhung).'),
+SC('<b>Herr Lang (60)</b> erwartet <b>stark sinkende Zinsen</b> und hat einen langen Anlagehorizont.','Welche Anleihe nutzt diese Erwartung am stärksten?',['Zerobond mit langer Laufzeit','FRN','Kurzläufer mit hohem Kupon','Reverse Floater'],'Hohe Duration = überproportionale Kursgewinne bei Zinsrückgang (umgekehrt auch Verluste!).'),
+SC('<b>Frau Dietz (52)</b> erwartet <b>steigende Zinsen</b>, will aber kaum Kursrisiko und kurzfristig verfügbare Verzinsung wie beim Festgeld.','Was passt?',['Floating Rate Note (FRN)','Zerobond mit 20 Jahren Laufzeit','Reverse Floater','Pfandbrief mit Festzins 30 J.'],'FRN passt sich an Geldmarktzinsen an, Kurs bleibt nahe pari.'),
+SC('<b>Herr Brandt (47)</b> erwartet <b>moderat fallende</b> Kurse, möchte keine Shortprodukte und akzeptiert nur begrenzte Verluste.','Welche Produkte bieten ihm einen begrenzten Puffer?',['Discount- oder Bonuszertifikat mit Puffer','Outperformance-Zertifikat','Long-KO mit hohem Hebel','Index-Zertifikat Open End'],'Puffer hilft, schützt aber nicht unbegrenzt – bei starkem Rückgang drohen dennoch Verluste.')
+);
+/* ============ ENGINE: KERN ============ */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const nf=(n,d)=>Number(n).toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d});
+const f0=n=>nf(n,0),f1=n=>nf(n,1),f2=n=>nf(n,2),f4=n=>nf(n,4);
+const KEY='bullbaer.v1';
+const COLORS=['#1cb0f6','#58cc02','#ff9600','#ce82ff','#ff5c8a','#2bc4a4','#6c7bff','#e07a00','#18b2a0','#d65bff','#4f9dff'];
+function shade(hex,f){const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;r=Math.round(r*f);g=Math.round(g*f);b=Math.round(b*f);return'#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);}
+const dkey=d=>{d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+const DAILY=50;
+const RANKS=[[0,'Praktikant','🧑‍🎓'],[80,'Werkstudent','📚'],[200,'Trainee','🏦'],[400,'Kundenberater','💼'],[700,'Anlageberater','📊'],[1100,'Senior-Berater','🎯'],[1700,'Teamleiter','🧠'],[2500,'Filialdirektor','🏢'],[3500,'Vorstand','👔'],[5000,'Wall-Street-Legende','🐂']];
+const PRAISE=['Bullish! 🐂','Stark!','Sitzt!','Volltreffer!','Klasse!','Genau so!','Börsenprofi!','Top-Rendite!','Sauber!'];
+
+function nextMonday(){const d=new Date();d.setHours(9,0,0,0);let add=(8-d.getDay())%7;if(add===0&&new Date()>d)add=7;d.setDate(d.getDate()+add);return dkey(d);}
+function defState(){return{name:'Eric',xp:0,streak:0,lastDay:'',dayXp:{},prog:{},boss:{},mist:{},fc:{},badges:{},flags:{},stats:{lessons:0,perfect:0,calcRight:0,blitzBest:0,simBest:0,fixed:0,answers:0,correct:0},exam:nextMonday(),sound:true,wtab:'cards',intro:false};}
+let S=(()=>{try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s){const d=defState();return Object.assign(d,s,{stats:Object.assign(d.stats,s.stats||{})});}}catch(e){}return defState();})();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+
+/* IDs & Lookup */
+const QMAP={};
+UNITS.forEach((u,ui)=>{u.color=COLORS[ui%COLORS.length];u.lessons.forEach((l,li)=>l.qs.forEach((q,qi)=>{q.id=u.id+'.'+li+'.'+qi;QMAP[q.id]=q;}));});
+const lessonKey=(ui,li)=>UNITS[ui].id+'.'+li;
+const totalLessons=()=>UNITS.reduce((a,u)=>a+u.lessons.length,0);
+const doneLessons=()=>UNITS.reduce((a,u,ui)=>a+u.lessons.filter((l,li)=>S.prog[lessonKey(ui,li)]).length,0);
+const allQs=()=>Object.values(QMAP);
+function nextLesson(){for(let ui=0;ui<UNITS.length;ui++)for(let li=0;li<UNITS[ui].lessons.length;li++)if(!S.prog[lessonKey(ui,li)])return[ui,li];return null;}
+
+/* XP, Streak, Rang */
+const rankIdx=xp=>{let r=0;RANKS.forEach((x,i)=>{if(xp>=x[0])r=i;});return r;};
+function addXp(n){
+  const before=rankIdx(S.xp),t=dkey();
+  if(S.lastDay!==t){const y=new Date();y.setDate(y.getDate()-1);S.streak=(S.lastDay===dkey(y))?S.streak+1:1;S.lastDay=t;}
+  S.xp+=n;S.dayXp[t]=(S.dayXp[t]||0)+n;
+  const h=new Date().getHours();if(h>=22||h<5)S.flags.night=1;if(h>=5&&h<8)S.flags.early=1;
+  save();
+  const after=rankIdx(S.xp);
+  if(after>before){setTimeout(()=>{toast('Aufstieg: '+RANKS[after][2]+' '+RANKS[after][1]+'!');sfx('lvl');confetti();},600);}
+}
+
+/* Badges */
+const BADGES=[
+{id:'first',i:'🎬',n:'Erster Trade',d:'Erste Lektion geschafft',t:()=>S.stats.lessons>=1},
+{id:'five',i:'🖐️',n:'High Five',d:'5 Lektionen',t:()=>S.stats.lessons>=5},
+{id:'half',i:'⛰️',n:'Halbzeit',d:'Die Hälfte aller Lektionen',t:()=>doneLessons()>=Math.ceil(totalLessons()/2)},
+{id:'all',i:'🎓',n:'Anlageberater',d:'Alle Lektionen abgeschlossen',t:()=>doneLessons()>=totalLessons()},
+{id:'perfect',i:'💎',n:'Perfekt',d:'Eine Lektion ohne Fehler',t:()=>S.stats.perfect>=1},
+{id:'perfect10',i:'👑',n:'Fehlerfrei x10',d:'10 perfekte Lektionen',t:()=>S.stats.perfect>=10},
+{id:'str3',i:'🔥',n:'Heiß gelaufen',d:'3 Tage Streak',t:()=>S.streak>=3},
+{id:'str7',i:'☄️',n:'Wochenserie',d:'7 Tage Streak',t:()=>S.streak>=7},
+{id:'xp100',i:'⚡',n:'100 XP',d:'100 XP gesammelt',t:()=>S.xp>=100},
+{id:'xp500',i:'💰',n:'500 XP',d:'500 XP gesammelt',t:()=>S.xp>=500},
+{id:'xp1000',i:'🏆',n:'1000 XP',d:'1000 XP gesammelt',t:()=>S.xp>=1000},
+{id:'boss1',i:'🐉',n:'Endgegner',d:'Ersten Unit-Test bestanden',t:()=>Object.keys(S.boss).length>=1},
+{id:'bossall',i:'🏰',n:'Bankenkönig',d:'Alle Unit-Tests bestanden',t:()=>Object.keys(S.boss).length>=UNITS.length},
+{id:'calc',i:'🧮',n:'Rechenprofi',d:'20 Rechenaufgaben richtig',t:()=>S.stats.calcRight>=20},
+{id:'fc',i:'🃏',n:'Kartenhai',d:'30 Karteikarten gemeistert',t:()=>Object.values(S.fc).filter(x=>x.b>=3).length>=30},
+{id:'blitz',i:'⚡',n:'Blitzmerker',d:'15+ Punkte in der Blitzrunde',t:()=>S.stats.blitzBest>=15},
+{id:'sim',i:'📜',n:'Klausurreif',d:'≥ 70 % im Klausur-Simulator',t:()=>S.stats.simBest>=70},
+{id:'fix',i:'🩹',n:'Fehlerkorrektor',d:'10 Fehler im Fehlerheft behoben',t:()=>S.stats.fixed>=10},
+{id:'night',i:'🌙',n:'Nachtschicht',d:'Nach 22 Uhr gelernt',t:()=>!!S.flags.night},
+{id:'early',i:'🌅',n:'Frühaufsteher',d:'Vor 8 Uhr gelernt',t:()=>!!S.flags.early}
+];
+function checkBadges(){BADGES.forEach(b=>{if(!S.badges[b.id]&&b.t()){S.badges[b.id]=dkey();save();setTimeout(()=>{toast('Neues Abzeichen: '+b.i+' '+b.n);sfx('lvl');},900);}});}
+
+/* UI-Helfer */
+let toastT;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);}
+function showSheet(html){const s=$('#sheet');s.innerHTML='<div class="pane">'+html+'</div>';s.classList.remove('hidden');s.onclick=e=>{if(e.target===s)closeSheet();};}
+function closeSheet(){$('#sheet').classList.add('hidden');$('#sheet').innerHTML='';}
+let AC=null;
+// iOS startet den AudioContext gesperrt; erst nach einer Berührung freischalten
+function unlockAudio(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state!=='running')AC.resume();}catch(e){}}
+['touchend','click'].forEach(ev=>document.addEventListener(ev,unlockAudio,{passive:true}));
+function tone(f,d,type,delay,vol){if(!S.sound)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const o=AC.createOscillator(),g=AC.createGain();o.type=type||'sine';o.frequency.value=f;const t=AC.currentTime+(delay||0);g.gain.setValueAtTime(vol||.15,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d);}catch(e){}}
+function sfx(k){if(k==='ok'){tone(660,.12,'triangle');tone(880,.18,'triangle',.1);}else if(k==='bad'){tone(220,.25,'sawtooth',0,.1);tone(165,.3,'sawtooth',.12,.1);}else if(k==='lvl'||k==='win'){[523,659,784,1047].forEach((f,i)=>tone(f,.22,'triangle',i*.12));}else if(k==='tick'){tone(900,.04,'square',0,.04);}if(navigator.vibrate&&S.sound){navigator.vibrate(k==='bad'?[60,40,60]:k==='ok'?15:[20,30,20]);}}
+function confetti(){const c=$('#confetti');const ctx=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;const cols=['#58cc02','#1cb0f6','#ffc800','#ff4b4b','#ce82ff','#ff9600'];const P=Array.from({length:130},()=>({x:innerWidth/2,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*14-4,r:Math.random()*6+3,c:pick(cols),a:Math.random()*6}));let f=0;(function step(){ctx.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.35;p.a+=.2;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r);ctx.restore();});if(++f<110)requestAnimationFrame(step);else ctx.clearRect(0,0,c.width,c.height);})();}
+
+/* HUD / NAV */
+let view='path';
+function cdInfo(){const d=new Date(S.exam+'T09:00:00');const ms=d-new Date();if(isNaN(ms))return{txt:'Datum setzen',days:99};if(ms<0)return{txt:'Klausur geschafft 🎉',days:0};const days=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);return{txt:days>0?`Noch ${days} T ${h} Std`:`Noch ${h} Std`,days:Math.max(1,Math.ceil(ms/864e5))};}
+function renderHud(){const dx=Math.min(100,Math.round((S.dayXp[dkey()]||0)/DAILY*100));const r=RANKS[rankIdx(S.xp)];
+ $('#hudin').innerHTML=`<div class="chip fire" title="Lernserie">🔥 ${S.streak}</div><div class="chip" onclick="go('profile')" title="Rang">${r[2]}</div><div class="chip xp" title="XP">⚡ ${S.xp}</div><div class="chip" title="Tagesziel ${DAILY} XP"><div class="ring" style="--p:${dx}"><i>${dx>=100?'✓':'🎯'}</i></div></div><div class="chip cd" onclick="go('profile')" title="Zeit bis zur Klausur">⏳ ${cdInfo().txt}</div>`;}
+const NAV=[['path','🗺️','Pfad'],['wissen','🃏','Wissen'],['calc','🧮','Rechnen'],['studio','📊','Studio'],['arena','⚔️','Arena'],['profile','👤','Profil']];
+function renderNav(){$('#navin').innerHTML=NAV.map(n=>`<button class="${view===n[0]?'on':''}" onclick="go('${n[0]}')"><span>${n[1]}</span>${n[2]}</button>`).join('');}
+function go(v){view=v;render();scrollTo(0,0);}
+function render(){renderHud();renderNav();const m=$('#main');({path:vPath,wissen:vWissen,calc:vCalc,studio:vStudio,arena:vArena,profile:vProfile})[view](m);}
+
+/* ============ PFAD ============ */
+function vPath(m){
+  const done=doneLessons(),tot=totalLessons(),nx=nextLesson(),cd=cdInfo();
+  const per=nx?Math.max(1,Math.ceil((tot-done)/Math.max(1,cd.days))):0;
+  let h=`<div class="hero"><div class="mascot">🐂</div><div style="flex:1"><h2>Moin ${esc(S.name)}!</h2><div class="muted">${done===tot?'Alles durch – jetzt Klausur-Simulator &amp; Fehlerheft!':'Noch <b>'+(tot-done)+'</b> von '+tot+' Lektionen bis zur Klausur'+(cd.days>0&&cd.days<30?' – Plan: <b>~'+per+' pro Tag</b>':'')+'.'}</div><div class="bar mt"><i style="width:${Math.round(done/tot*100)}%"></i></div></div></div>`;
+  if(nx)h+=`<button class="btn green full" onclick="startLesson(${nx[0]},${nx[1]})">▶ Weiter: ${esc(UNITS[nx[0]].lessons[nx[1]].t)}</button>`;
+  UNITS.forEach((u,ui)=>{
+    const dn=u.lessons.filter((l,li)=>S.prog[lessonKey(ui,li)]).length;
+    h+=`<div class="unit" style="--c:${u.color};--cd:${shade(u.color,.7)}"><div class="unit-head" style="background:${u.color};box-shadow:0 4px 0 ${shade(u.color,.7)}"><div class="ic">${u.icon}</div><div><h3>Einheit ${ui+1}: ${u.title}</h3><p>${u.sub}</p></div><div class="sp"><b>${dn}/${u.lessons.length}</b></div></div><div style="text-align:right;margin-top:8px"><button class="btn ghost sm" onclick="openSheetCheat(${ui})">📖 Spickzettel</button></div><div class="nodes">`;
+    const off=[0,-44,-66,-44,0,44,66,44];
+    u.lessons.forEach((l,li)=>{
+      const st=S.prog[lessonKey(ui,li)]||0,cur=nx&&nx[0]===ui&&nx[1]===li;
+      h+=`<div style="transform:translateX(${off[li%8]}px);position:relative"><button class="node ${st?'done':''} ${cur?'cur':''}" onclick="openLesson(${ui},${li})">${cur?'<span class="start-bub">START</span>':''}${st?'✓':(li+1)}<span class="st">${st?'★'.repeat(st)+'<span style="opacity:.3">'+'★'.repeat(3-st)+'</span>':''}</span></button></div>`;
+    });
+    const b=S.boss[u.id];
+    h+=`<div style="margin-top:12px"><button class="node boss ${b!=null?'done':''}" onclick="openBoss(${ui})">${b!=null?'👑':'🐉'}<span class="st">${b!=null?b+' %':'Unit-Test'}</span></button></div>`;
+    h+='</div></div>';
+  });
+  m.innerHTML=h;
+}
+function openLesson(ui,li){const u=UNITS[ui],l=u.lessons[li],st=S.prog[lessonKey(ui,li)]||0;
+  showSheet(`<h3>${u.icon} ${esc(l.t)}</h3><p class="muted">Einheit ${ui+1} · ${l.cards.length} Lernkarten · ${l.qs.length} Fragen · 3 Herzen ${st?'· bisher '+'★'.repeat(st):''}</p><div class="row mt"><button class="btn green" style="flex:1" onclick="closeSheet();startLesson(${ui},${li})">▶ Start</button><button class="btn ghost" onclick="closeSheet();showCards(${ui},${li})">📖 Nur Lernkarten</button></div>`);}
+function openBoss(ui){const u=UNITS[ui],b=S.boss[u.id];showSheet(`<h3>🐉 Unit-Test: ${esc(u.title)}</h3><p class="muted">10 gemischte Fragen aus der ganzen Einheit. Du hast 3 Herzen – überlebe, um die Krone zu holen! Doppelte XP. ${b!=null?'Bestes Ergebnis: '+b+' %':''}</p><button class="btn purple full" onclick="closeSheet();startBoss(${ui})">⚔️ Kämpfen</button>`);}
+function openSheetCheat(ui){const u=UNITS[ui];showSheet(`<h3>📖 Spickzettel – ${esc(u.title)}</h3><div style="max-height:62vh;overflow-y:auto" class="sheet">${cheatHtml(u)}</div><button class="btn ghost full mt" onclick="closeSheet()">Schließen</button>`);}
+function cheatHtml(u){return u.lessons.map(l=>l.cards.map(c=>`<h4 style="color:var(--gold)">${c.h}</h4><div class="lcard" style="min-height:0;padding:10px;margin-bottom:8px;border:none;background:transparent">${c.b}</div>`).join('')).join('');}
+
+/* ============ RUNNER ============ */
+let R=null;
+const ov=()=>$('#overlay');
+function openOv(html){const o=ov();o.classList.remove('hidden');o.innerHTML=html;document.body.style.overflow='hidden';}
+function closeOv(){const o=ov();o.classList.add('hidden');o.innerHTML='';document.body.style.overflow='';if(R&&R.timer)clearInterval(R.timer);R=null;render();checkBadges();}
+function showCards(ui,li,next){const u=UNITS[ui],l=u.lessons[li];cardsFlow(l.cards,l.t,u.color,next||(()=>closeOv()));}
+function cardsFlow(cards,title,color,next){let i=0;
+  const draw=()=>{const c=cards[i];openOv(`<div class="run-top"><button class="x" onclick="closeOv()">✕</button><div class="bar"><i style="width:${(i+1)/cards.length*100}%;background:${color}"></i></div><span class="muted" style="font-weight:800">${i+1}/${cards.length}</span></div><div class="run-body"><div class="run-type">${esc(title)} · Lernkarte</div><div class="lcard" style="border-color:${color}"><h3>${c.h}</h3>${c.b}</div></div><div class="run-foot"><div class="in row"><button class="btn ghost" id="cb" ${i?'':'disabled'}>◀</button><button class="btn green" style="flex:1" id="cn">${i<cards.length-1?'Weiter':'Los geht’s ▶'}</button></div></div>`);
+    $('#cb').onclick=()=>{i--;draw();};$('#cn').onclick=()=>{if(i<cards.length-1){i++;draw();}else next();};};
+  draw();}
+function startLesson(ui,li){const u=UNITS[ui],l=u.lessons[li];
+  cardsFlow(l.cards,l.t,u.color,()=>runQs({title:l.t,qs:l.qs.slice(),hearts:3,color:u.color,kind:'lesson',ui,li,key:lessonKey(ui,li)}));}
+function startBoss(ui){const u=UNITS[ui];const pool=shuffle(u.lessons.flatMap(l=>l.qs)).slice(0,10);runQs({title:'Unit-Test: '+u.title,qs:pool,hearts:3,color:'#ce82ff',kind:'boss',ui,xpMul:2});}
+function qType(q){return{mc:q.ctx?'Beratungsfall':'Single Choice',tf:'Richtig oder falsch?',ms:'Mehrere Antworten möglich',ma:'Ordne einander zu',or:'Bringe in die richtige Reihenfolge',nu:'Rechenaufgabe'}[q.t];}
+function runQs(o){
+  R=Object.assign({i:0,queue:o.qs.slice(),correct:0,first:0,combo:0,xp:0,wrong:0,retried:new Set(),t0:Date.now(),locked:false,log:[],total:o.qs.length},o);
+  R.hearts=o.hearts==null?null:o.hearts;
+  if(o.timeLimit){R.left=o.timeLimit;R.timer=setInterval(()=>{R.left--;const t=$('#tm');if(t)t.textContent=Math.floor(R.left/60)+':'+String(R.left%60).padStart(2,'0');if(R.left<=0){clearInterval(R.timer);finishRun();}},1000);}
+  showQ();}
+function heartsHtml(){return R.hearts==null?(R.left!=null?`<span class="tm" id="tm">${Math.floor(R.left/60)}:${String(R.left%60).padStart(2,'0')}</span>`:''):`<span class="hearts">${'❤️'.repeat(R.hearts)}${'🖤'.repeat(Math.max(0,3-R.hearts))}</span>`;}
+/* Fragetyp-Views: {html,bind,ready,grade} */
+function vMC(q){const opts=shuffle(q.o.map((t,i)=>({t,ok:i===0})));let sel=-1;
+  return{html:opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="k">${i+1}</span>${esc(o.t)}</button>`).join(''),
+  bind(root,chg){root.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(R.locked)return;sel=+b.dataset.i;root.querySelectorAll('.opt').forEach(x=>x.classList.toggle('sel',x===b));chg();});},
+  ready:()=>sel>=0,
+  grade(root){const ok=opts[sel].ok;root.querySelectorAll('.opt').forEach((b,i)=>{b.classList.remove('sel');b.classList.add(opts[i].ok?'ok':(i===sel?'bad':'dim'));});return{ok,ans:opts.find(o=>o.ok).t};}};}
+function vTF(q){let sel=null;
+  return{html:`<div class="tfrow"><button class="opt" data-v="1">✔ Richtig</button><button class="opt" data-v="0">✘ Falsch</button></div>`,
+  bind(root,chg){root.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(R.locked)return;sel=b.dataset.v==='1';root.querySelectorAll('.opt').forEach(x=>x.classList.toggle('sel',x===b));chg();});},
+  ready:()=>sel!==null,
+  grade(root){const ok=sel===q.a;root.querySelectorAll('.opt').forEach(b=>{b.classList.remove('sel');const v=b.dataset.v==='1';b.classList.add(v===q.a?'ok':(v===sel?'bad':'dim'));});return{ok,ans:q.a?'Richtig':'Falsch'};}};}
+function vMS(q){const opts=shuffle(q.ok.map(t=>({t,ok:true})).concat(q.bad.map(t=>({t,ok:false}))));const sel=new Set();
+  return{html:opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="k">☐</span>${esc(o.t)}</button>`).join(''),
+  bind(root,chg){root.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(R.locked)return;const i=+b.dataset.i;sel.has(i)?sel.delete(i):sel.add(i);b.classList.toggle('sel',sel.has(i));b.querySelector('.k').textContent=sel.has(i)?'☑':'☐';chg();});},
+  ready:()=>sel.size>0,
+  grade(root){let ok=true;root.querySelectorAll('.opt').forEach((b,i)=>{const o=opts[i],s=sel.has(i);b.classList.remove('sel');if(o.ok!==s)ok=false;b.classList.add(o.ok?'ok':(s?'bad':'dim'));});return{ok,ans:opts.filter(o=>o.ok).map(o=>o.t).join(' · ')};}};}
+function vMA(q){const L=shuffle(q.p.map((p,i)=>({t:p[0],i}))),Rr=shuffle(q.p.map((p,i)=>({t:p[1],i})));const map={};let selL=null,n=0;const col={};
+  const root0=()=>$('#qbody');
+  const paint=()=>{const r=root0();r.querySelectorAll('[data-side]').forEach(b=>{const s=b.dataset.side,i=+b.dataset.i;b.className='opt';if(s==='l'){if(map[i]!==undefined)b.classList.add('p'+col[i]);else if(selL===i)b.classList.add('tmp');}else{const li=Object.keys(map).find(k=>map[k]===i);if(li!==undefined)b.classList.add('p'+col[li]);}});};
+  return{html:`<div class="pairs"><div>${L.map(o=>`<button class="opt" data-side="l" data-i="${o.i}">${esc(o.t)}</button>`).join('')}</div><div>${Rr.map(o=>`<button class="opt" data-side="r" data-i="${o.i}">${esc(o.t)}</button>`).join('')}</div></div>`,
+  bind(root,chg){root.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>{if(R.locked)return;const s=b.dataset.side,i=+b.dataset.i;
+    if(s==='l'){if(map[i]!==undefined){delete map[i];selL=null;}else selL=i;}
+    else{const li=Object.keys(map).find(k=>map[k]===i);if(li!==undefined)delete map[li];else if(selL!==null){map[selL]=i;col[selL]=(n++)%6;selL=null;}}
+    paint();chg();});},
+  ready:()=>Object.keys(map).length===q.p.length,
+  grade(root){let ok=true;root.querySelectorAll('[data-side]').forEach(b=>{const s=b.dataset.side,i=+b.dataset.i;b.className='opt';if(s==='l'){const g=map[i]===i;if(!g)ok=false;b.classList.add(g?'ok':'bad');}else{const li=Object.keys(map).find(k=>map[k]===i);b.classList.add(li!==undefined&&+li===i?'ok':'bad');}});return{ok,ans:q.p.map(p=>p[0]+' → '+p[1]).join('<br>'),raw:1};}};}
+function vOR(q){const items=q.items.map((t,i)=>({t,i}));const pool=shuffle(items);let placed=[];
+  const draw=()=>{const r=$('#qbody');r.querySelector('.slot').innerHTML=placed.length?placed.map((o,k)=>`<button class="opt" data-pl="${k}"><span class="k">${k+1}</span>${esc(o.t)}</button>`).join(''):'<span class="muted">Tippe die Schritte in der richtigen Reihenfolge an …</span>';r.querySelector('.pool').innerHTML=pool.filter(o=>!placed.includes(o)).map(o=>`<button class="opt" data-po="${o.i}">${esc(o.t)}</button>`).join('');wire();};
+  let chgCb=()=>{};
+  const wire=()=>{const r=$('#qbody');r.querySelectorAll('[data-po]').forEach(b=>b.onclick=()=>{if(R.locked)return;placed.push(pool.find(o=>o.i===+b.dataset.po));draw();chgCb();});r.querySelectorAll('[data-pl]').forEach(b=>b.onclick=()=>{if(R.locked)return;placed.splice(+b.dataset.pl,1);draw();chgCb();});};
+  return{html:`<div class="slot"></div><div class="pool"></div>`,bind(root,chg){chgCb=chg;draw();},ready:()=>placed.length===items.length,
+  grade(root){let ok=true;root.querySelectorAll('[data-pl]').forEach((b,k)=>{const g=placed[k].i===k;if(!g)ok=false;b.classList.add(g?'ok':'bad');});return{ok,ans:items.map((o,k)=>(k+1)+'. '+esc(o.t)).join('<br>'),raw:1};}};}
+function parseNum(s){s=String(s).replace(/[€%\s]/g,'');if(!s)return NaN;if(s.includes(','))s=s.replace(/\./g,'').replace(',','.');else if(/^\d{1,3}(\.\d{3})+$/.test(s))s=s.replace(/\./g,'');return parseFloat(s);}
+function vNU(q){let val='';
+  return{html:`<div class="numin"><input id="nin" inputmode="decimal" autocomplete="off" placeholder="Antwort (Dezimalkomma)"><span>${esc(q.unit||'')}</span></div>`,
+  bind(root,chg){const i=root.querySelector('#nin');i.oninput=()=>{val=i.value;chg();};setTimeout(()=>{try{i.focus();}catch(e){}},50);},
+  ready:()=>!isNaN(parseNum(val)),
+  grade(root){const v=parseNum(val),ok=Math.abs(v-q.a)<=(q.tol||0)+1e-9;const i=root.querySelector('#nin');i.disabled=true;i.style.borderColor=ok?'var(--green)':'var(--red)';return{ok,ans:nf(q.a,q.dec!=null?q.dec:(Number.isInteger(q.a)?0:2))+(q.unit?' '+esc(q.unit):''),raw:1};}};}
+const VIEWS={mc:vMC,tf:vTF,ms:vMS,ma:vMA,or:vOR,nu:vNU};
+
+function showQ(){
+  const q=R.queue[R.i];if(!q){finishRun();return;}
+  R.locked=false;R.cur=VIEWS[q.t](q);
+  const ctx=q.ctx?`<div class="ctx">${q.ctx}</div>`:'';
+  openOv(`<div class="run-top"><button class="x" onclick="exitRun()">✕</button><div class="bar"><i style="width:${Math.min(100,R.i/R.queue.length*100)}%;background:${R.color||'var(--green)'}"></i></div>${heartsHtml()}</div><div class="run-body"><div class="run-type">${qType(q)}${R.retried.has(q)?' · Wiederholung':''}</div><div class="run-q">${q.html?q.q:esc(q.q)}</div>${ctx}<div id="qbody">${R.cur.html}</div></div><div class="run-foot" id="foot"><div class="in"><button class="btn green full" id="chk" disabled>${R.noFeedback?'Weiter':'Prüfen'}</button></div></div>`);
+  const body=$('#qbody'),chk=$('#chk');
+  R.cur.bind(body,()=>{chk.disabled=!R.cur.ready();});
+  chk.onclick=()=>checkQ(q);
+  if(R.timer&&R.left!=null){/* Timer läuft weiter */}
+}
+function checkQ(q){
+  if(R.locked||!R.cur.ready())return;R.locked=true;
+  const body=$('#qbody'),g=R.cur.grade(body);
+  S.stats.answers++;if(g.ok)S.stats.correct++;
+  const first=!R.retried.has(q);
+  R.log.push({q,ok:g.ok,ans:g.raw?g.ans:esc(g.ans),first});
+  let xp=0;
+  if(g.ok){R.correct++;if(first){R.first++;xp=10+(R.combo>=3?2:0)+(R.combo>=5?3:0);}else xp=4;R.combo++;R.xp+=xp;
+    if(S.mist[q.id]){delete S.mist[q.id];S.stats.fixed++;}
+    if(R.kind==='calc')S.stats.calcRight++;
+    sfx('ok');}
+  else{R.wrong++;R.combo=0;if(R.hearts!=null)R.hearts--;
+    S.mist[q.id]=QMAP[q.id]?1:q;
+    if(!R.noRetry&&first){R.retried.add(q);R.queue.push(q);}
+    sfx('bad');}
+  save();
+  const dead=R.hearts!=null&&R.hearts<=0;
+  if(R.noFeedback){R.i++;R.locked=false;showQ();return;}
+  const foot=$('#foot'),ans=g.raw?g.ans:esc(g.ans);
+  foot.className='run-foot '+(g.ok?'ok':'bad');
+  const mood=g.ok?`${pick(PRAISE)}${xp?' <span style="font-size:.85rem;opacity:.85">+'+xp+' XP'+(R.combo>=4?' · 🔥 Combo '+R.combo:'')+'</span>':''}`:'Leider daneben';
+  foot.innerHTML=`<div class="in"><div class="fb-t">${g.ok?'✅':'❌'} ${mood}</div><div class="fb-e">${g.ok?'':'<b>Richtig:</b> '+ans+'<br>'}${q.e?(q.html?q.e:esc(q.e)):''}</div><button class="btn ${g.ok?'green':'red'} full" id="nxt">${dead?'Weiter':'Weiter'}</button></div>`;
+  const hd=$('.run-top .hearts');if(hd)hd.innerHTML=''+'❤️'.repeat(Math.max(0,R.hearts))+'🖤'.repeat(Math.max(0,3-R.hearts));
+  $('#nxt').onclick=()=>{R.i++;if(dead){finishRun(true);}else showQ();};
+  setTimeout(()=>{const f=$('.fb-e');if(f)f.scrollTop=0;},0);
+}
+function exitRun(){if(confirm('Lektion abbrechen? Fortschritt dieser Runde geht verloren.')){closeOv();}}
+function finishRun(dead){
+  if(!R)return;if(R.timer)clearInterval(R.timer);
+  const o=R,secs=Math.round((Date.now()-o.t0)/1000),acc=o.log.length?Math.round(o.log.filter(l=>l.ok&&l.first).length/o.total*100):0;
+  const failed=!!dead||(o.hearts!=null&&o.hearts<=0);
+  let bonus=0,stars=0,title='',emoji='🎉';
+  if(!failed){
+    if(o.kind==='lesson'){stars=Math.max(1,o.hearts);const k=o.key;S.prog[k]=Math.max(S.prog[k]||0,stars);S.stats.lessons++;if(o.wrong===0){S.stats.perfect++;bonus+=15;}bonus+=20;title='Lektion geschafft!';}
+    else if(o.kind==='boss'){const u=UNITS[o.ui];S.boss[u.id]=Math.max(S.boss[u.id]||0,acc);bonus=30;stars=Math.max(1,o.hearts);title='Endgegner besiegt!';emoji='👑';}
+    else if(o.kind==='sim'){const p=Math.round(o.correct/o.total*100);S.stats.simBest=Math.max(S.stats.simBest,p);bonus=Math.round(p/2);title=p>=85?'Sehr gut – Klausur gerockt!':p>=70?'Gut – klausurreif!':p>=50?'Bestanden – noch etwas Feinschliff':'Noch nicht bestanden – weiter üben!';emoji=p>=70?'🏆':p>=50?'👍':'📚';}
+    else{bonus=10;title='Runde geschafft!';}
+  }else{title='Keine Herzen mehr';emoji='💔';}
+  const xpGain=Math.round((o.xp+bonus)*(failed?0.3:(o.xpMul||1)));
+  if(xpGain>0)addXp(xpGain);
+  save();
+  if(!failed&&o.kind!=='sim')confetti();
+  if(!failed)sfx('win');else sfx('bad');
+  const pct=Math.round(o.correct/Math.max(1,o.log.length)*100);
+  let review='';
+  if(o.kind==='sim'){const wr=o.log.filter(l=>!l.ok);review=wr.length?`<div style="text-align:left;margin-top:10px"><h3>Zum Nacharbeiten (${wr.length})</h3>${wr.map(l=>`<div class="card"><b>${l.q.html?l.q.q:esc(l.q.q)}</b><div class="muted mt">Richtig: ${l.ans}</div><div style="font-size:.88rem;margin-top:4px">${l.q.e?(l.q.html?l.q.e:esc(l.q.e)):''}</div></div>`).join('')}</div>`:'<p>Fehlerfrei! 🎯</p>';}
+  const cb=o.onDone;
+  openOv(`<div class="run-body"><div class="res"><div class="big">${emoji}</div><h2>${title}</h2>${stars?`<div class="stars">${'⭐'.repeat(stars)}${'<span style="opacity:.25">⭐</span>'.repeat(3-stars)}</div>`:''}<div class="stats"><div class="stat"><small>XP</small><b style="color:var(--gold)">+${xpGain}</b></div><div class="stat"><small>Richtig</small><b>${o.kind==='sim'?Math.round(o.correct/o.total*100):acc}%</b></div><div class="stat"><small>Zeit</small><b>${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}</b></div></div>${review}</div></div><div class="run-foot"><div class="in row"><button class="btn green" style="flex:1" id="rdone">Weiter</button>${failed&&o.kind==='lesson'?'<button class="btn gold" id="rretry">Nochmal</button>':''}</div></div>`);
+  $('#rdone').onclick=()=>closeOv();
+  const rr=$('#rretry');if(rr)rr.onclick=()=>{const ui=o.ui,li=o.li;R=null;ov().classList.add('hidden');startLesson(ui,li);};
+}
+
+/* ============ WISSEN: Karten / Spickzettel / Glossar ============ */
+const fcs=i=>S.fc[i]||{b:0};
+function vWissen(m){
+  const t=S.wtab;
+  let h=`<div class="seg"><button class="${t==='cards'?'on':''}" onclick="setW('cards')">🃏 Karteikarten</button><button class="${t==='cheat'?'on':''}" onclick="setW('cheat')">📖 Spickzettel</button><button class="${t==='gloss'?'on':''}" onclick="setW('gloss')">🔎 Glossar</button></div>`;
+  if(t==='cards'){
+    const c=[0,0,0,0];FLASH.forEach((f,i)=>c[Math.min(3,fcs(i).b)]++);
+    h+=`<div class="card"><h3>🃏 Karteikarten-Training</h3><p class="muted">${FLASH.length} Begriffe. Antwort wissen → Karte steigt eine Box auf. Nicht gewusst → zurück in Box 1. Es kommen immer die schwächsten Karten zuerst.</p><div class="stats"><div class="stat"><small>Neu/Box 1</small><b>${c[0]}</b></div><div class="stat"><small>Box 2</small><b>${c[1]}</b></div><div class="stat"><small>Box 3</small><b>${c[2]}</b></div><div class="stat"><small>Gemeistert</small><b style="color:var(--green)">${c[3]}</b></div></div><div class="bar"><i style="width:${Math.round(c[3]/FLASH.length*100)}%"></i></div><button class="btn green full mt" onclick="startFlash()">▶ 12 Karten lernen</button></div>`;
+  }else if(t==='cheat'){
+    h+=`<p class="muted">Kompakte Zusammenfassung aller Lernkarten – ideal für die letzte Stunde vor der Klausur.</p>`+UNITS.map((u,ui)=>`<details class="sheet"><summary>${u.icon} Einheit ${ui+1}: ${u.title}</summary><div class="cnt">${cheatHtml(u)}</div></details>`).join('');
+  }else{
+    h+=`<input class="search" id="gsearch" placeholder="Begriff suchen … (z. B. Barriere, EMIR, Duration)" oninput="glossFilter()"><div id="glist"></div>`;
+  }
+  m.innerHTML=h;if(t==='gloss')glossFilter();
+}
+function setW(t){S.wtab=t;save();render();}
+function glossFilter(){const q=($('#gsearch')||{value:''}).value.toLowerCase();const l=FLASH.filter(f=>!q||(f[0]+' '+f[1]).toLowerCase().includes(q)).sort((a,b)=>a[0].localeCompare(b[0],'de'));$('#glist').innerHTML=l.map(f=>`<div class="gl"><b>${esc(f[0])}</b><br>${esc(f[1])}</div>`).join('')||'<p class="muted">Nichts gefunden.</p>';}
+function startFlash(){
+  let idx=FLASH.map((f,i)=>i);idx=shuffle(idx).sort((a,b)=>fcs(a).b-fcs(b).b);
+  const unmastered=idx.filter(i=>fcs(i).b<3);const q=(unmastered.length>=12?unmastered:idx).slice(0,12);
+  R={kind:'flash',queue:q,i:0,known:0,xp:0,again:new Set(),t0:Date.now()};flashShow();
+}
+function flashShow(){
+  const i=R.queue[R.i];if(i===undefined){flashEnd();return;}const f=FLASH[i],b=fcs(i).b;
+  openOv(`<div class="run-top"><button class="x" onclick="closeOv()">✕</button><div class="bar"><i style="width:${R.i/R.queue.length*100}%"></i></div><span class="muted" style="font-weight:800">${R.i+1}/${R.queue.length}</span></div><div class="run-body"><div class="boxes">${[0,1,2].map(k=>`<i class="${k<=Math.min(2,b)&&b>0?'on':''}"></i>`).join('')}</div><div class="flash" id="fl"><div class="in"><div class="f1">${esc(f[0])}<small>Tippen zum Umdrehen</small></div><div class="f2">${esc(f[1])}</div></div></div><div id="fbtn" class="row hidden"><button class="btn red" style="flex:1" id="fno">Nochmal</button><button class="btn green" style="flex:1" id="fyes">Wusste ich</button></div></div>`);
+  $('#fl').onclick=()=>{$('#fl').classList.add('flip');$('#fbtn').classList.remove('hidden');};
+  const rate=ok=>{const st=fcs(i);if(ok){S.fc[i]={b:Math.min(3,st.b+1)};R.known++;R.xp+=3;sfx('ok');}else{S.fc[i]={b:0};sfx('bad');if(!R.again.has(i)){R.again.add(i);R.queue.push(i);}}save();R.i++;flashShow();};
+  $('#fyes').onclick=e=>{e.stopPropagation();rate(true);};$('#fno').onclick=e=>{e.stopPropagation();rate(false);};
+}
+function flashEnd(){const o=R;const xp=o.xp+10;addXp(xp);confetti();sfx('win');
+  openOv(`<div class="run-body"><div class="res"><div class="big">🃏</div><h2>Runde geschafft!</h2><div class="stats"><div class="stat"><small>XP</small><b style="color:var(--gold)">+${xp}</b></div><div class="stat"><small>Gewusst</small><b>${o.known}</b></div></div></div></div><div class="run-foot"><div class="in row"><button class="btn green" style="flex:1" onclick="closeOv()">Weiter</button><button class="btn blue" onclick="R=null;startFlash()">Nochmal</button></div></div>`);}
+/* ============ RECHEN-LAB ============ */
+let GID=0;
+const NUh=(q,a,tol,unit,e,dec)=>{const x=NU(q,a,tol,unit,e);x.html=true;x.id='g'+(++GID)+'_'+Date.now();if(dec!=null)x.dec=dec;return x;};
+const sol=(steps,res)=>`<div class="sol">${steps.join('<br>')}<br><b>⇒ ${res}</b></div>`;
+const pct=x=>f2(x)+' %';
+function pvSum(cf,y){return cf.reduce((s,c,i)=>s+c/Math.pow(1+y,i+1),0);}
+function ytmSolve(cf,mw){let lo=-.5,hi=1;for(let k=0;k<200;k++){const m=(lo+hi)/2;if(pvSum(cf,m)>mw)lo=m;else hi=m;}return(lo+hi)/2;}
+function durOf(cf,y){let mw=0,w=0;cf.forEach((c,i)=>{const p=c/Math.pow(1+y,i+1);mw+=p;w+=(i+1)*p;});return{mw,d:w/mw};}
+const GEN={
+bond:{ic:'💶',t:'Anleihe bewerten',d:'Marktwert aus Rendite',make(){const N=pick([100000,500000,1000000]),c=pick([2,2.5,3,4,5]),n=pick([2,3,4]),y=pick([1,1.5,2,3,4,5,6]);let mw=0;const st=[];for(let t=1;t<=n;t++){const cf=N*c/100+(t===n?N:0),pv=cf/Math.pow(1+y/100,t);mw+=pv;st.push(`t=${t}: ${f2(cf)} ÷ ${(1+y/100).toFixed(4)}<sup>${t}</sup> = ${f2(pv)}`);}
+  return NUh(`Anleihe: Nominal ${f0(N)} €, Kupon ${nf(c,1)} %, Restlaufzeit ${n} Jahre, Rendite ${nf(y,1)} %. Marktwert?`,mw,1,'€',sol(st,`Marktwert = ${f2(mw)} €`));}},
+zero:{ic:'0️⃣',t:'Zerobond',d:'Preis & Zins',make(){const n=ri(2,10),z=pick([1,1.5,2,2.5,3,4,5,6]);if(Math.random()<.5){const p=100/Math.pow(1+z/100,n);return NUh(`Zerobond (Nominal 100), Laufzeit ${n} Jahre, Nullkuponzins ${nf(z,1)} %. Fairer Preis?`,p,.02,'',sol([`P = 100 ÷ (1+${nf(z/100,3)})<sup>${n}</sup>`],`${f2(p)}`));}
+  const p=Math.round(100/Math.pow(1+z/100,n)*100)/100,r=(Math.pow(100/p,1/n)-1)*100;return NUh(`Ein Zerobond (Nominal 100, Laufzeit ${n} Jahre) kostet ${f2(p)}. Wie hoch ist die Rendite p. a.?`,r,.02,'%',sol([`R = (100 ÷ ${f2(p)})<sup>1/${n}</sup> − 1`],pct(r)));}},
+ytm1:{ic:'📐',t:'Rendite berechnen',d:'1-jährige & 2-jährige Anleihe',make(){const N=1000000,c=pick([2,3,4,5]),y=pick([1,2,3,4,5,6]);if(Math.random()<.5){const mw=Math.round(N*(1+c/100)/(1+y/100)*100)/100,r=(N*(1+c/100)/mw-1)*100;return NUh(`1-jährige Anleihe, Nominal ${f0(N)} €, Kupon ${c} %, Marktwert ${f2(mw)} €. Rendite?`,r,.02,'%',sol([`Rückfluss in t=1: ${f2(N*(1+c/100))} €`,`R = ${f2(N*(1+c/100))} ÷ ${f2(mw)} − 1`],pct(r)));}
+  const n=2,cf=[N*c/100,N*(1+c/100)],mw=Math.round(pvSum(cf,y/100)*100)/100,r=ytmSolve(cf,mw)*100;return NUh(`2-jährige Anleihe, Nominal ${f0(N)} €, Kupon ${c} %, Marktwert ${f2(mw)} €. Rendite (Näherung genügt)?`,r,.03,'%',sol([`Gesucht: R mit ${f2(cf[0])}/(1+R) + ${f2(cf[1])}/(1+R)² = ${f2(mw)}`,'Iterativ / quadratische Gleichung lösen'],pct(r)));}},
+zrate:{ic:'📉',t:'Nullkuponzins ermitteln',d:'Bootstrapping 2. Jahr',make(){const N=1000000,c=pick([2,3,4]),z1=pick([1,1.5,2,2.5]),z2=z1+pick([.5,.8,1,1.2]);const mw=Math.round((N*c/100/(1+z1/100)+N*(1+c/100)/Math.pow(1+z2/100,2))*100)/100;const rest=mw-N*c/100/(1+z1/100),z=(Math.sqrt(N*(1+c/100)/rest)-1)*100;
+  return NUh(`Nullkuponzins für 1 Jahr: ${nf(z1,1)} %. Eine 2-jährige Anleihe (Nominal ${f0(N)} €, Kupon ${c} %) hat den Marktwert ${f2(mw)} €. Wie hoch ist der Nullkuponzins für 2 Jahre?`,z,.02,'%',sol([`Barwert Zahlung t=1: ${f2(N*c/100)} ÷ ${nf(1+z1/100,4)} = ${f2(N*c/100/(1+z1/100))}`,`Rest für t=2: ${f2(rest)}`,`z₂ = (${f2(N*(1+c/100))} ÷ ${f2(rest)})<sup>1/2</sup> − 1`],pct(z)));}},
+dur:{ic:'⏱️',t:'Duration',d:'Macaulay-Duration',make(){const c=pick([3,4,5,6]),n=pick([2,3,4]),y=pick([2,3,4,5,6]);const cf=[];for(let t=1;t<=n;t++)cf.push(c+(t===n?100:0));const r=durOf(cf,y/100);const st=cf.map((x,i)=>`t=${i+1}: PV = ${f2(x/Math.pow(1+y/100,i+1))} · ${i+1} = ${f2((i+1)*x/Math.pow(1+y/100,i+1))}`);
+  return NUh(`Anleihe: Nominal 100, Kupon ${c} %, Laufzeit ${n} Jahre, Rendite ${y} %. Macaulay-Duration in Jahren?`,r.d,.02,'Jahre',sol(st.concat([`MW = ${f2(r.mw)}`,`D = Σ(t·PV) ÷ MW`]),`${f2(r.d)} Jahre`));}},
+moddur:{ic:'📏',t:'Modified Duration',d:'Zinssensitivität',make(){const D=pick([2.5,3.4,4.77,6.2,8.0]),y=pick([2,3,4,5]);const md=D/(1+y/100);if(Math.random()<.5)return NUh(`Macaulay-Duration ${nf(D,2)} Jahre, Marktrendite ${y} %. Modified Duration?`,md,.02,'',sol([`MD = ${nf(D,2)} ÷ ${nf(1+y/100,2)}`],f2(md)));
+  const dr=pick([.5,1,2]);return NUh(`Modified Duration ${f2(md)}. Die Marktrendite steigt um ${nf(dr,1)} Prozentpunkte. Um wie viel Prozent fällt der Marktwert ungefähr?`,md*dr,.05,'%',sol([`ΔMW/MW ≈ −MD · ΔR = −${f2(md)} · ${nf(dr,1)} %`],`−${f2(md*dr)} % (Rückgang)`));}},
+os:{ic:'🎟️',t:'Optionsschein-Kennzahlen',d:'Hebel, Aufgeld, Break-even',make(){const S0=pick([60,80,100,120,150,180]),bp=S0-pick([5,10,15,20,30]),op=(S0-bp)+pick([3,5,8,10,12]);const inner=S0-bp,hebel=S0/op,aufg=(op+bp-S0)/S0*100,be=bp+op;const all=sol([`Innerer Wert = ${S0} − ${bp} = ${inner}`,`Hebel = ${S0} ÷ ${op} = ${f2(hebel)}`,`Aufgeld = (${op} + ${bp} − ${S0}) ÷ ${S0} = ${f2(aufg)} %`,`Break-even = ${bp} + ${op} = ${be}`],'siehe oben');
+  const k=pick(['inner','hebel','aufg','be']);const base=`Call-Optionsschein (Bezugsverhältnis 1:1): Aktienkurs ${S0} €, Basispreis ${bp} €, Optionsscheinpreis ${op} €.`;
+  if(k==='inner')return NUh(base+' Innerer Wert?',inner,0,'€',all);if(k==='hebel')return NUh(base+' Hebel?',hebel,.02,'',all);if(k==='aufg')return NUh(base+' Aufgeld in %?',aufg,.05,'%',all);return NUh(base+' Break-even-Kurs der Aktie?',be,0,'€',all);}},
+bonus:{ic:'🎁',t:'Bonuszertifikat',d:'Barriere, Bonus, Rückzahlung',make(){const S0=pick([40,50,80,100]),bar=S0*pick([.6,.65,.7,.75]),bon=S0*pick([1.1,1.15,1.2,1.25]),T=pick([1,2,3]);const k=pick(['abst','rend','pay1','pay2']);
+  const base=`Bonuszertifikat auf eine Aktie (Kurs bei Emission ${f0(S0)} €, Preis des Zertifikats ${f0(S0)} €): Barriere ${f0(bar)} €, Bonusbetrag ${f0(bon)} €, Laufzeit ${T} Jahr(e).`;
+  if(k==='abst'){const a=(S0-bar)/S0*100;return NUh(base+' Abstand zur Barriere in %?',a,.05,'%',sol([`(${f0(S0)} − ${f0(bar)}) ÷ ${f0(S0)}`],pct(a)));}
+  if(k==='rend'){const r=(bon-S0)/S0*100/T;return NUh(base+' Seitwärtsrendite p. a. in %?',r,.05,'%',sol([`(${f0(bon)} − ${f0(S0)}) ÷ ${f0(S0)} ÷ ${T} Jahre`],pct(r)));}
+  const fin=Math.round(S0*pick([.9,1,1.05])*100)/100;if(k==='pay1')return NUh(base+` Die Barriere wurde NIE berührt, der Aktienkurs steht am Ende bei ${f2(fin)} €. Rückzahlung?`,Math.max(bon,fin),.01,'€',sol([`max(Bonus ${f0(bon)}; Kurs ${f2(fin)})`],f2(Math.max(bon,fin))+' €'));
+  return NUh(base+` Die Barriere wurde während der Laufzeit BERÜHRT, der Aktienkurs steht am Ende bei ${f2(fin)} €. Rückzahlung?`,fin,.01,'€',sol(['Barriere verletzt → Zertifikat folgt dem Basiswert 1:1'],f2(fin)+' €'));}},
+disc:{ic:'🏷️',t:'Discountzertifikat',d:'Discount, Max-Rendite, Rückzahlung',make(){const S0=pick([40,50,80,100]),d=pick([6,8,10,12,15]),P=Math.round(S0*(1-d/100)*100)/100,cap=S0;const k=pick(['d','r','p']);const base=`Discountzertifikat: Aktienkurs ${f0(S0)} €, Preis des Zertifikats ${f2(P)} €, Cap ${f0(cap)} €, Laufzeit genau 1 Jahr.`;
+  if(k==='d'){const x=(S0-P)/S0*100;return NUh(base+' Discount in %?',x,.05,'%',sol([`(${f0(S0)} − ${f2(P)}) ÷ ${f0(S0)}`],pct(x)));}
+  if(k==='r'){const x=(cap-P)/P*100;return NUh(base+' Maximale Rendite in %?',x,.05,'%',sol([`(${f0(cap)} − ${f2(P)}) ÷ ${f2(P)}`],pct(x)));}
+  const fin=Math.round(S0*pick([.8,.9,1.1,1.2])*100)/100,pay=Math.min(fin,cap);return NUh(base+` Der Aktienkurs am Bewertungstag: ${f2(fin)} €. Rückzahlung?`,pay,.01,'€',sol([`min(Kurs ${f2(fin)}; Cap ${f0(cap)})`],f2(pay)+' €'));}},
+sprint:{ic:'🏃',t:'Sprint & Outperformance',d:'Partizipation & Cap',make(){const bp=pick([40,50,80,100]),cap=bp*pick([1.1,1.2]),pf=pick([1.5,2]);if(Math.random()<.5){const maxb=bp+(cap-bp)*pf;return NUh(`Sprint-Zertifikat: Basispreis ${f0(bp)} €, Cap ${f0(cap)} €, Partizipationsfaktor ${nf(pf,1)}. Höchstbetrag?`,maxb,.01,'€',sol([`${f0(bp)} + (${f0(cap)} − ${f0(bp)}) × ${nf(pf,1)}`],f2(maxb)+' €'));}
+  const fin=bp*pick([.9,1.05,1.1,1.2]),pay=fin<=bp?fin:bp+pf*(fin-bp);return NUh(`Outperformance-Zertifikat: Basispreis ${f0(bp)} €, Partizipationsfaktor ${nf(pf,1)}, kein Cap. Basiswert am Laufzeitende: ${f2(fin)} €. Rückzahlung?`,pay,.01,'€',sol([fin<=bp?'Unter/auf Basispreis: Rückzahlung 1:1':`${f0(bp)} + ${nf(pf,1)} × (${f2(fin)} − ${f0(bp)})`],f2(pay)+' €'));}},
+express:{ic:'🚄',t:'Expresszertifikat',d:'Auszahlungsbeträge',make(){const ez=pick([6,7.5,8,9]),S0=pick([40,50,100]),bar=.6,k=pick(['k','fin']);const NW=1000;
+  if(k==='k'){const t=ri(1,3);return NUh(`Expresszertifikat: Nennwert ${f0(NW)} €, Express-Zahlung ${nf(ez,1)} % p. a. (nicht kumuliert gezahlt, sondern aufgeschoben). Das Auszahlungslevel wird erstmals am ${t}. Bewertungstag erreicht. Auszahlung?`,NW*(1+ez*t/100),.01,'€',sol([`${f0(NW)} + ${t} × ${f2(NW*ez/100)}`],f2(NW*(1+ez*t/100))+' €'));}
+  const fin=Math.round(S0*pick([.4,.45,.5,.55])*100)/100;return NUh(`Expresszertifikat auf eine Aktie (Start ${f0(S0)} €, Nennwert ${f0(NW)} €), Barriere ${f0(S0*bar)} € (60 %), nie vorzeitig fällig geworden. Am finalen Bewertungstag steht die Aktie bei ${f2(fin)} €, das Auszahlungslevel (${f0(S0)} €) ist verfehlt. Rückzahlung?`,fin<=S0*bar?NW*fin/S0:NW,.01,'€',sol([fin<=S0*bar?`Barriere verletzt: ${f0(NW)} × ${f2(fin)} ÷ ${f0(S0)}`:'Über der Barriere, unter dem Level: Nennwert'],f2(fin<=S0*bar?NW*fin/S0:NW)+' €'));}},
+aktA:{ic:'📄',t:'Aktienanleihe',d:'Kupon + Rückzahlung',make(){const c=pick([5,6,7,8]),bp=pick([40,50,80,100]),fin=Math.round(bp*pick([.7,.85,1.1,1.2])*100)/100,N=1000;const back=fin>=bp?N:N/bp*fin,tot=back+N*c/100;return NUh(`Aktienanleihe: Nominal ${f0(N)} €, Kupon ${c} %, Basispreis ${f0(bp)} € (Bezugsverhältnis ${f2(N/bp)} Aktien). Aktienkurs bei Fälligkeit: ${f2(fin)} €. Gesamtrückfluss (Wert der Rückzahlung inkl. Kupon)?`,tot,.5,'€',sol([fin>=bp?`Kurs ≥ Basispreis: Rückzahlung ${f0(N)} €`:`Aktienlieferung: ${f2(N/bp)} Aktien × ${f2(fin)} € = ${f2(back)} €`,`+ Kupon ${f2(N*c/100)} €`],f2(tot)+' €'));}},
+kgv:{ic:'📈',t:'Aktienkennzahlen',d:'KGV, Dividendenrendite, DVFA',make(){const k=pick(['kgv','dr','kurs','dvfa']);if(k==='kgv'){const g=pick([2,3,4,5,6]),kg=pick([10,12,15,18,20]);return NUh(`Aktienkurs ${f0(g*kg)} €, Gewinn je Aktie ${g} €. KGV?`,kg,.01,'',sol([`${f0(g*kg)} ÷ ${g}`],f0(kg)));}
+  if(k==='dr'){const kurs=pick([40,50,60,80]),dv=pick([1,1.5,2,2.4]);return NUh(`Dividende ${nf(dv,2)} €, Aktienkurs ${f0(kurs)} €. Dividendenrendite?`,dv/kurs*100,.02,'%',sol([`${nf(dv,2)} ÷ ${f0(kurs)}`],pct(dv/kurs*100)));}
+  if(k==='kurs'){const g=pick([2,3,5]),kg=pick([12,15,16]);return NUh(`Vergleichbare Unternehmen haben ein KGV von ${kg}. Der Gewinn je Aktie beträgt ${g} €. Fairer Kurs?`,g*kg,.01,'€',sol([`${g} × ${kg}`],f0(g*kg)+' €'));}
+  const e=pick([20,40,60]),kg=pick([10,15]),a=pick([10,20]);return NUh(`Festpreisverfahren: DVFA-Ergebnis ${e} Mio €, vergleichbares KGV ${kg}, ${a} Mio Aktien. Wert je Aktie?`,e*kg/a,.01,'€',sol([`${e} × ${kg} = ${e*kg} Mio € Unternehmenswert`,`÷ ${a} Mio Aktien`],f2(e*kg/a)+' €'));}},
+bezug:{ic:'🧾',t:'Bezugsrecht',d:'Rechnerischer Wert',make(){const ka=pick([60,80,100,120]),kn=ka-pick([10,20,30]),v=pick([3,4,5]);const br=(ka-kn)/(v+1);return NUh(`Kapitalerhöhung gegen Einlagen im Verhältnis ${v}:1. Kurs der alten Aktie ${f0(ka)} €, Bezugskurs der jungen Aktie ${f0(kn)} €. Rechnerischer Wert des Bezugsrechts?`,br,.01,'€',sol([`BR = (K<sub>alt</sub> − K<sub>neu</sub>) ÷ (Bezugsverhältnis + 1)`,`= (${f0(ka)} − ${f0(kn)}) ÷ (${v} + 1)`],f2(br)+' €'));}},
+wsv:{ic:'🔁',t:'Wandelanleihe',d:'Bedingte Kapitalerhöhung',make(){const V=pick([100,200,300,500]),q=pick([2,3,4]);const st=V/q;return NUh(`${f0(V)} Mio € Wandelschuldverschreibungen (Stückelung 100 €). Umtauschverhältnis ${q}:1 (${q} WSV à 100 € → 1 Aktie à 100 € Nennwert). Maximale bedingte Kapitalerhöhung in Mio €?`,st,.01,'Mio €',sol([`${f0(V)} Mio € ÷ ${q} = ${f0(st)} Mio € Aktien-Nennbetrag`],f2(st)+' Mio €'));}},
+swap:{ic:'🔄',t:'Zinsswap',d:'Nettozahlung & Forward Rate',make(){if(Math.random()<.6){const N=pick([5,10,20]),fx=pick([2.5,3,3.5]),vr=fx-pick([.4,.6,.8,1]);const net=N*1e6*(fx-vr)/100;return NUh(`Payer-Swap: Nominal ${N} Mio €, Festsatz ${nf(fx,1)} %, variabler Satz ${nf(vr,1)} %. Nettozahlung des Payers pro Jahr (Betrag in €)?`,net,1,'€',sol([`(${nf(fx,1)} % − ${nf(vr,1)} %) × ${N} Mio €`],f0(net)+' € (Payer zahlt netto)'));}
+  const z1=pick([1,1.5,2]),z2=z1+pick([.5,1,1.5]),f=(Math.pow(1+z2/100,2)/(1+z1/100)-1)*100;return NUh(`Nullkuponzinssätze: z₁ = ${nf(z1,1)} %, z₂ = ${nf(z2,1)} %. Forward Rate für Jahr 2?`,f,.02,'%',sol([`f = (1+z₂)² ÷ (1+z₁) − 1`,`= ${nf(1+z2/100,4)}² ÷ ${nf(1+z1/100,4)} − 1`],pct(f)));}},
+spread:{ic:'↔️',t:'Geld-Brief-Spanne',d:'Spread in € und %',make(){const br=pick([50,100,25.5,12.4]),sp=pick([.2,.3,.5,.8,1]);const g=Math.round((br-sp)*100)/100;if(Math.random()<.5)return NUh(`Geldkurs ${f2(g)} €, Briefkurs ${f2(br)} €. Geld-Brief-Spanne in €?`,br-g,.005,'€',sol([`${f2(br)} − ${f2(g)}`],f2(br-g)+' €'));
+  return NUh(`Geldkurs ${f2(g)} €, Briefkurs ${f2(br)} €. Spanne in % vom Briefkurs?`,(br-g)/br*100,.02,'%',sol([`(${f2(br)} − ${f2(g)}) ÷ ${f2(br)}`],pct((br-g)/br*100)));}}
+};
+function fallstudie(){
+  const N=1e6,y5=ytmSolve([25000,25000,25000,25000,1025000],1038038.24),z1=1017000/1003948.67-1,z2=Math.sqrt(1019000/(1009793.85-19000/(1+z1)))-1,z3=Math.cbrt(1021000/(1018947.88-21000/(1+z1)-21000/Math.pow(1+z2,2)))-1;
+  const mwWP=pvSum([15000,15000,1015000],.0145),mwZ=15000/(1+z1)+15000/Math.pow(1+z2,2)+1015000/Math.pow(1+z3,3);
+  const zb=N/Math.pow(1+z3,3);const dA=durOf([25000,25000,25000,25000,1025000],.017),mdA=dA.d/1.017,mdZ=5/1.017119;
+  const H=(t,x)=>`<b>${t}</b><br>${x}`;
+  return[
+  NUh('<b>Fallstudie a)</b> Anleihe: Nominal 1 Mio €, Kupon 2,5 %, Restlaufzeit 5 Jahre, Marktwert 1.038.038,24 €. Anleihespezifische Rendite?',y5*100,.01,'%',sol(['MW = Σ CF/(1+R)<sup>t</sup> mit CF = 25.000 (t=1–4) und 1.025.000 (t=5)','Iterative Lösung (Zielwertsuche / interner Zinsfuß)'],pct(y5*100))),
+  NUh('<b>Fallstudie b)</b> 1-jährige Anleihe: Kupon 1,7 %, Nominal 1 Mio €, Marktwert 1.003.948,67 €. Nullkuponzins für 1 Jahr?',z1*100,.01,'%',sol(['z₁ = 1.017.000 ÷ 1.003.948,67 − 1'],pct(z1*100))),
+  NUh('<b>Fallstudie b)</b> 2-jährige Anleihe: Kupon 1,9 %, Marktwert 1.009.793,85 €. Nullkuponzins für 2 Jahre (z₁ aus der vorigen Aufgabe)?',z2*100,.01,'%',sol(['1.009.793,85 = 19.000/(1+z₁) + 1.019.000/(1+z₂)²',`Rest nach t=1: ${f2(1009793.85-19000/(1+z1))}`,'z₂ = √(1.019.000 ÷ Rest) − 1'],pct(z2*100))),
+  NUh('<b>Fallstudie b)</b> 3-jährige Anleihe: Kupon 2,1 %, Marktwert 1.018.947,88 €. Nullkuponzins für 3 Jahre (mit z₁ = 1,30 % und z₂ = 1,4009 %)?',z3*100,.01,'%',sol(['1.018.947,88 = 21.000/(1+z₁) + 21.000/(1+z₂)² + 1.021.000/(1+z₃)³','z₃ = ³√(1.021.000 ÷ Rest) − 1'],pct(z3*100))),
+  NUh('<b>Fallstudie c)</b> Anleihe 1 Mio €, 3 Jahre, Kupon 1,5 %. Marktwert mit der <b>Wertpapierrendite aus b)</b> (1,45 %)?',mwWP,1,'€',sol(['15.000/1,0145 + 15.000/1,0145² + 1.015.000/1,0145³'],f2(mwWP)+' €')),
+  NUh('<b>Fallstudie c)</b> Gleiche Anleihe. Marktwert mit den <b>Nullkuponzinssätzen</b> (1,30 % / 1,4009 % / 1,4517 %)? Gleichzeitig der Wert nach den anleihespezifischen Renditen (Replikation).',mwZ,1,'€',sol(['15.000/(1+z₁) + 15.000/(1+z₂)² + 1.015.000/(1+z₃)³','Mit Hilfe der anleihespezifischen Renditen (Kreditaufnahme 3 J., Kapitalanlagen 2 J. und 1 J.) ergibt sich derselbe Wert.'],f2(mwZ)+' €')),
+  NUh('<b>Fallstudie d)</b> Fairer Emissionspreis eines echten Zerobonds: Nominal 1 Mio €, Laufzeit 3 Jahre (z₃ = 1,4517 %)?',zb,2,'€',sol(['P = 1.000.000 ÷ (1+z₃)³'],f2(zb)+' €')),
+  NUh('<b>Fallstudie e)</b> Macaulay-Duration der Anleihe aus a) (Rendite 1,7 %)?',dA.d,.01,'Jahre',sol(['D = Σ t·PV(CF<sub>t</sub>) ÷ MW'],f2(dA.d)+' Jahre')),
+  NUh('<b>Fallstudie e)</b> Modified Duration der Anleihe aus a)?',mdA,.01,'',sol(['MD = D ÷ (1 + 0,017)'],f2(mdA))),
+  NUh('<b>Fallstudie e)</b> Modified Duration des 5-jährigen Zerobonds (Nullkuponzins 1,7119 %)?',mdZ,.01,'',sol(['D = 5 Jahre (Zerobond), MD = 5 ÷ 1,017119'],f2(mdZ)+' – höher als bei der Kuponanleihe, weil keine laufenden Zahlungen den Schwerpunkt nach vorne ziehen.'))
+  ];}
+function vCalc(m){
+  m.innerHTML=`<h2 class="sec" style="margin-top:0">🧮 Rechen-Lab</h2><p class="muted">Jede Runde: 5 Aufgaben mit zufälligen Zahlen und ausführlichem Lösungsweg. Dezimalkomma verwenden (z. B. 4,75).</p><div class="card" style="border-color:var(--gold)"><h3>📋 Original-Fallstudie „Bewertung von Anleihen“</h3><p class="muted">Alle Teilaufgaben a)–e) der Vorlesung als Schritt-für-Schritt-Training.</p><button class="btn gold full" onclick="startFall()">Fallstudie starten</button></div><div class="grid">${Object.keys(GEN).map(k=>`<div class="tile" onclick="startCalc('${k}')"><div class="ic">${GEN[k].ic}</div><h4>${GEN[k].t}</h4><p>${GEN[k].d}</p></div>`).join('')}<div class="tile" onclick="startCalc('mix')" style="border-color:var(--purple)"><div class="ic">🎲</div><h4>Gemischte Runde</h4><p>Zufällige Aufgaben aus allen Bereichen</p></div></div>`;}
+function startCalc(k){const keys=Object.keys(GEN),qs=[];for(let i=0;i<5;i++)qs.push(GEN[k==='mix'?pick(keys):k].make());runQs({title:'Rechen-Lab',qs,hearts:null,color:'#ffc800',kind:'calc',noRetry:true});}
+function startFall(){runQs({title:'Fallstudie',qs:fallstudie(),hearts:null,color:'#ffc800',kind:'calc',noRetry:true});}
+
+/* ============ PAYOFF-STUDIO ============ */
+const PRODS=[
+{id:'index',ic:'📈',n:'Index',col:'#1cb0f6',params:[],price:()=>100,pay:S=>S,info:{erw:'steigend',risk:'Fallende Kurse, Emittent',merk:'1:1-Partizipation – Gewinne und Verluste wie der Index (ohne Dividenden bei Preisindizes).'}},
+{id:'disc',ic:'🏷️',n:'Discount',col:'#58cc02',params:[{k:'cap',l:'Cap',min:80,max:130,v:100},{k:'pr',l:'Kaufpreis des Zertifikats',min:70,max:100,v:90}],price:p=>p.pr,pay:(S,p)=>Math.min(S,p.cap),facts:p=>`Discount: <b>${f1((100-p.pr))} %</b> · Max.-Rendite: <b>${f1((p.cap-p.pr)/p.pr*100)} %</b> · Verlust erst unter ${f1(p.pr)} €`,info:{erw:'seitwärts bis leicht steigend',risk:'Starker Kursrückgang, Cap begrenzt Gewinn',merk:'Rabatt als Puffer gegen Kursverluste – dafür Gewinn nur bis zum Cap.'}},
+{id:'bonus',ic:'🎁',n:'Bonus',col:'#ffc800',useMin:true,params:[{k:'bonus',l:'Bonuslevel',min:105,max:140,v:120},{k:'bar',l:'Barriere',min:40,max:95,v:70}],price:()=>100,barrier:p=>p.bar,pay:(S,p,t)=>t?S:Math.max(S,p.bonus),facts:p=>`Abstand zur Barriere: <b>${f0(100-p.bar)} %</b> · Bonusrendite: <b>${f0(p.bonus-100)} %</b>`,info:{erw:'seitwärts bis leicht steigend',risk:'Barrierebruch (laufend beobachtet) → Verlust wie Basiswert',merk:'Barriere nie berührt → mindestens Bonus. Einmal berührt → Bonus weg, 1:1 Basiswert. Kein Cap.'}},
+{id:'express',ic:'🚄',n:'Express',col:'#ff9600',params:[{k:'ez',l:'Express-Zahlung p. a. (%)',min:3,max:15,v:8},{k:'A',l:'Auszahlungslevel',min:80,max:110,v:100},{k:'B',l:'Barriere (nur final)',min:40,max:80,v:60},{k:'k',l:'Bewertungstag Nr.',min:1,max:3,v:3}],price:()=>100,pay:(S,p)=>{const k=Math.round(p.k);if(S>=p.A)return 100+p.ez*k;if(k<3)return null;return S>=p.B?100:S;},facts:p=>`Bei Erreichen am ${Math.round(p.k)}. Tag: <b>${f1(100+p.ez*Math.round(p.k))} €</b> · Barriere zählt nur am finalen Tag (3.)`,info:{erw:'seitwärts bis leicht steigend',risk:'Unter der Barriere am Ende: Verlust wie Basiswert',merk:'Vorzeitige Rückzahlung bei Level; Express-Zahlungen kumulieren; Rendite nach oben begrenzt.'}},
+{id:'kap',ic:'🛡️',n:'Kapitalschutz',col:'#2bc4a4',params:[{k:'schutz',l:'Kapitalschutz (%)',min:80,max:100,v:100},{k:'pf',l:'Partizipation (%)',min:30,max:150,v:70}],price:()=>100,pay:(S,p)=>p.schutz+p.pf/100*Math.max(S-100,0),info:{erw:'sicherheitsorientiert',risk:'Emittentenrisiko; Schutz nur zum Laufzeitende; Zinsänderung',merk:'Zerobond + Option: Kapital geschützt (nur bei zahlungsfähigem Emittenten), Chance anteilig.'}},
+{id:'out',ic:'⬆️',n:'Outperf.',col:'#ce82ff',params:[{k:'bp',l:'Basispreis',min:80,max:110,v:100},{k:'pf',l:'Partizipationsfaktor',min:1.1,max:3,v:1.5,step:.1}],price:()=>100,pay:(S,p)=>S<=p.bp?S:p.bp+p.pf*(S-p.bp),info:{erw:'deutlich steigend',risk:'Volle Verluste unter Basispreis, keine Dividenden',merk:'Ab dem Basispreis überproportionale Teilnahme – nach unten 1:1.'}},
+{id:'spr',ic:'🏃',n:'Sprint',col:'#ff5c8a',params:[{k:'bp',l:'Basispreis',min:90,max:110,v:100},{k:'cap',l:'Cap',min:105,max:150,v:120},{k:'pf',l:'Partizipationsfaktor',min:1.5,max:3,v:2,step:.5}],price:()=>100,pay:(S,p)=>S<p.bp?S:p.bp+p.pf*(Math.min(S,p.cap)-p.bp),facts:p=>`Höchstbetrag: <b>${f1(p.bp+p.pf*(p.cap-p.bp))} €</b> (Max.-Rendite ${f1(p.bp+p.pf*(p.cap-p.bp)-100)} %)`,info:{erw:'moderat steigend',risk:'Verluste 1:1 unter Basispreis',merk:'Überproportional zwischen Basispreis und Cap, danach gedeckelt.'}},
+{id:'akt',ic:'📄',n:'Aktienanleihe',col:'#6c7bff',params:[{k:'kup',l:'Kupon (%)',min:3,max:12,v:7},{k:'bp',l:'Basispreis',min:80,max:110,v:100}],price:()=>100,pay:(S,p)=>(S>=p.bp?100:100*S/p.bp)+p.kup,info:{erw:'neutral bis leicht steigend',risk:'Aktienandienung bei Kursverlust; Emittent',merk:'Anleihe + Short Put: Kupon sicher (Emittentenbonität), Nominal nur bei Kurs ≥ Basispreis.'}},
+{id:'ko',ic:'💥',n:'Long-KO',col:'#ff4b4b',useMin:true,params:[{k:'bp',l:'Basispreis = KO-Schwelle',min:70,max:95,v:90}],price:p=>100-p.bp,barrier:p=>p.bp,pay:(S,p,t)=>t?0:Math.max(S-p.bp,0),facts:p=>`Preis: <b>${f0(100-p.bp)} €</b> · Hebel ≈ <b>${f1(100/(100-p.bp))}</b>`,info:{erw:'klar steigend (kurzfristig)',risk:'Berührt der Basiswert die KO-Schwelle → Totalverlust',merk:'Hebelprodukt: überproportional in beide Richtungen, KO = Ende.'}},
+{id:'call',ic:'🎟️',n:'Call-OS',col:'#e07a00',params:[{k:'bp',l:'Basispreis',min:80,max:120,v:100},{k:'pr',l:'Optionsscheinpreis',min:1,max:25,v:8}],price:p=>p.pr,pay:(S,p)=>Math.max(S-p.bp,0),facts:p=>`Break-even: <b>${f1(p.bp+p.pr)}</b> · Hebel ≈ <b>${f1(100/p.pr)}</b> · Aufgeld ${f1((p.pr+p.bp-100))} %`,info:{erw:'klar steigend',risk:'Verfall wertlos – max. Verlust = Prämie',merk:'Verbrieftes Optionsrecht: Gewinn unbegrenzt, Verlust auf Kaufpreis begrenzt.'}}
+];
+let ST={pid:'index',p:{},S:100,min:100};
+function stSetProd(id){ST.pid=id;const pr=PRODS.find(x=>x.id===id);ST.p={};pr.params.forEach(q=>ST.p[q.k]=q.v);ST.S=100;ST.min=100;vStudio($('#main'));}
+function stRet(pr,S,touched){const pay=pr.pay(S,ST.p,touched),pc=pr.price(ST.p);return pay==null?null:(pay-pc)/pc*100;}
+function stDraw(){
+  const pr=PRODS.find(x=>x.id===ST.pid),p=ST.p;const W=640,H=330,pl=48,pr_=14,pt=14,pb=36,X0=0,X1=160;
+  const bar=pr.barrier?pr.barrier(p):null,minEff=Math.min(ST.min,ST.S,100),touched=!!(pr.useMin&&bar!=null&&minEff<=bar);
+  const main=[],alt=[],dir=[];let ymax=40;
+  for(let x=X0;x<=X1;x+=1){const t=bar!=null&&x<=bar;const a=stRet(pr,x,t);main.push([x,a]);if(a!=null&&a>ymax)ymax=a;if(bar!=null){const b=stRet(pr,x,true);alt.push([x,b]);}dir.push([x,x-100]);}
+  ymax=Math.min(ymax,300);ymax=Math.max(50,Math.ceil(ymax/(ymax>150?100:50))*(ymax>150?100:50));if(ymax<=250&&ymax>150)ymax=Math.ceil(ymax/50)*50;
+  const ymin=-100,px=x=>pl+(x-X0)/(X1-X0)*(W-pl-pr_),py=y=>pt+(ymax-Math.max(ymin-4,Math.min(ymax+4,y)))/(ymax-ymin)*(H-pt-pb);
+  const path=a=>{let d='',pen=false;a.forEach(([x,y])=>{if(y==null){pen=false;return;}d+=(pen?'L':'M')+px(x).toFixed(1)+' '+py(y).toFixed(1)+' ';pen=true;});return d;};
+  const step=ymax>250?100:ymax>100?50:25;let g='';
+  for(let y=ymin;y<=ymax;y+=step){g+=`<line x1="${pl}" x2="${W-pr_}" y1="${py(y)}" y2="${py(y)}" stroke="${y===0?'#6b8594':'#243640'}" stroke-width="${y===0?1.6:1}"/><text x="${pl-6}" y="${py(y)+4}" fill="#9fb3bf" font-size="11" text-anchor="end">${y>0?'+':''}${y}%</text>`;}
+  for(let x=0;x<=160;x+=20)g+=`<line x1="${px(x)}" x2="${px(x)}" y1="${pt}" y2="${H-pb}" stroke="${x===100?'#4b6a7a':'#1c2b33'}" stroke-dasharray="${x===100?'4 3':'0'}"/><text x="${px(x)}" y="${H-pb+16}" fill="#9fb3bf" font-size="11" text-anchor="middle">${x}</text>`;
+  g+=`<text x="${(pl+W-pr_)/2}" y="${H-4}" fill="#9fb3bf" font-size="11" text-anchor="middle">Kurs des Basiswerts bei Fälligkeit (Start = 100)</text>`;
+  if(bar!=null)g+=`<line x1="${px(bar)}" x2="${px(bar)}" y1="${pt}" y2="${H-pb}" stroke="#ff4b4b" stroke-dasharray="5 4"/><text x="${px(bar)+4}" y="${pt+11}" fill="#ff7b7b" font-size="11">Barriere ${f0(bar)}</text>`;
+  const clip=`<clipPath id="cp"><rect x="${pl}" y="${pt}" width="${W-pl-pr_}" height="${H-pt-pb}"/></clipPath>`;
+  const sy=stRet(pr,ST.S,touched);
+  let mk='';if(sy!=null)mk=`<line x1="${px(ST.S)}" x2="${px(ST.S)}" y1="${py(sy)}" y2="${H-pb}" stroke="#fff" stroke-dasharray="3 3" opacity=".5"/><circle cx="${px(ST.S)}" cy="${py(sy)}" r="6" fill="${sy>=0?'#58cc02':'#ff4b4b'}" stroke="#fff" stroke-width="2"/>`;
+  const svg=`<svg viewBox="0 0 ${W} ${H}">${clip}${g}<g clip-path="url(#cp)"><path d="${path(dir)}" fill="none" stroke="#9fb3bf" stroke-width="2" stroke-dasharray="6 5"/>${bar!=null?`<path d="${path(alt)}" fill="none" stroke="${pr.col}" stroke-width="2" opacity=".35" stroke-dasharray="2 4"/>`:''}<path d="${path(main)}" fill="none" stroke="${pr.col}" stroke-width="4" stroke-linejoin="round"/></g>${mk}<text x="${pl+8}" y="${pt+26}" fill="${pr.col}" font-size="12" font-weight="700">━ ${pr.n}</text><text x="${pl+8}" y="${pt+42}" fill="#9fb3bf" font-size="12">╍ Direktinvestment</text>${bar!=null?`<text x="${pl+8}" y="${pt+58}" fill="${pr.col}" opacity=".6" font-size="12">∙∙ falls Barriere berührt</text>`:''}</svg>`;
+  const pay=pr.pay(ST.S,p,touched),pc=pr.price(p);let ro='';
+  if(pay==null)ro=`<div class="r1">Bewertungstag ${Math.round(p.k)}: Basiswert (${f0(ST.S)}) unter Level → <span class="muted">Zertifikat läuft weiter, keine Auszahlung</span></div>`;
+  else{const gain=pay-pc,pctv=gain/pc*100;ro=`<div class="r1">Rückzahlung: ${f2(pay)} € <span class="${gain>=0?'pos':'neg'}">(${gain>=0?'+':''}${f1(pctv)} %)</span></div><div class="muted">Kaufpreis ${f2(pc)} € · Direktinvestment: <b class="${ST.S>=100?'pos':'neg'}">${ST.S>=100?'+':''}${f0(ST.S-100)} %</b>${touched?' · <span class="neg">Barriere / KO verletzt!</span>':''}</div>`;}
+  $('#stchart').innerHTML=svg;$('#strd').innerHTML=ro+(pr.facts?`<div class="tip">${pr.facts(p)}</div>`:'');
+  if(sy!=null&&ST.S!==100&&!window._stX){}
+}
+function vStudio(m){
+  const pr=PRODS.find(x=>x.id===ST.pid);if(!Object.keys(ST.p).length&&pr.params.length)pr.params.forEach(q=>ST.p[q.k]=q.v);
+  m.innerHTML=`<div class="studio"><h2 class="sec" style="margin-top:0">📊 Payoff-Studio</h2><p class="muted">Verstehe jedes Produkt am Auszahlungsprofil: Ziehe die Regler und beobachte Gewinn/Verlust (in % des Kaufpreises) im Vergleich zum Direktinvestment.</p><div class="prodpick">${PRODS.map(x=>`<button class="${x.id===ST.pid?'on':''}" onclick="stSetProd('${x.id}')">${x.ic} ${x.n}</button>`).join('')}</div><div class="stk"><div id="stchart"></div><div class="readout" id="strd"></div></div><div class="sl"><label><span>Kurs bei Fälligkeit</span><b id="v_S">${ST.S}</b></label><input type="range" min="0" max="160" step="1" value="${ST.S}" oninput="ST.S=+this.value;$('#v_S').textContent=this.value;stDraw()"></div>${pr.useMin?`<div class="sl"><label><span>Tiefstkurs während der Laufzeit</span><b id="v_m">${ST.min}</b></label><input type="range" min="0" max="100" step="1" value="${ST.min}" oninput="ST.min=+this.value;$('#v_m').textContent=this.value;stDraw()"></div>`:''}${pr.params.map(q=>`<div class="sl"><label><span>${q.l}</span><b id="v_${q.k}">${ST.p[q.k]}</b></label><input type="range" min="${q.min}" max="${q.max}" step="${q.step||1}" value="${ST.p[q.k]}" oninput="ST.p['${q.k}']=+this.value;$('#v_${q.k}').textContent=this.value;stDraw()"></div>`).join('')}<div class="card"><h3>${pr.ic} ${pr.n}</h3><p><b>Markterwartung:</b> ${pr.info.erw}<br><b>Hauptrisiko:</b> ${pr.info.risk}<br><b>Merke:</b> ${pr.info.merk}</p></div></div>`;
+  stDraw();
+}
+
+/* ============ ARENA ============ */
+function vArena(m){
+  const nm=Object.keys(S.mist).length;
+  m.innerHTML=`<h2 class="sec" style="margin-top:0">⚔️ Arena</h2><div class="grid">
+  <div class="tile" style="border-color:var(--gold)" onclick="startSim()"><div class="ic">🏆</div><h4>Klausur-Simulator</h4><p>25 gemischte Fragen · 45 Min · keine Hilfen, Auswertung am Ende</p><div class="meta">Bestwert: ${S.stats.simBest||0} %</div></div>
+  <div class="tile" onclick="startBlitz()"><div class="ic">⚡</div><h4>Blitzrunde</h4><p>60 Sekunden – richtig/falsch &amp; Single Choice. Fehler kosten 5 Sekunden.</p><div class="meta">Rekord: ${S.stats.blitzBest||0} Punkte</div></div>
+  <div class="tile" onclick="startScen()"><div class="ic">🧑‍💼</div><h4>Beratungsfälle</h4><p>Kundenprofil lesen, passendes Produkt wählen – Geeignetheit üben.</p><div class="meta">${SCEN.length} Fälle</div></div>
+  <div class="tile" onclick="startMist()"><div class="ic">🩹</div><h4>Fehlerheft</h4><p>Alle Fragen, die du falsch hattest – bis sie sitzen.</p><div class="meta">${nm} offen</div></div>
+  <div class="tile" onclick="startRandom()"><div class="ic">🎲</div><h4>Zufalls-Training</h4><p>10 zufällige Fragen aus allen Einheiten.</p></div></div>`;}
+function startSim(){const qs=[];UNITS.forEach(u=>{const pool=shuffle(u.lessons.flatMap(l=>l.qs).filter(q=>q.t!=='nu'));qs.push(...pool.slice(0,2));});const keys=Object.keys(GEN);for(let i=0;i<3;i++)qs.push(GEN[pick(keys)].make());
+  showSheet(`<h3>🏆 Klausur-Simulator</h3><p class="muted">${qs.length} Fragen, 45 Minuten, kein Feedback bis zum Ende – wie in der echten Klausur. Danach bekommst du die Auswertung mit Lösungen.</p><button class="btn gold full" id="gosim">Los geht’s</button>`);
+  $('#gosim').onclick=()=>{closeSheet();runQs({title:'Klausur-Simulator',qs:shuffle(qs),hearts:null,color:'#ffc800',kind:'sim',noFeedback:true,noRetry:true,timeLimit:45*60});};}
+function startScen(){runQs({title:'Beratungsfälle',qs:shuffle(SCEN).slice(0,5).map((q,i)=>Object.assign({},q,{id:'s'+SCEN.indexOf(q)})),hearts:3,color:'#ce82ff',kind:'scen'});}
+function startMist(){const ids=Object.keys(S.mist);if(!ids.length){toast('Keine offenen Fehler – stark! 🎉');return;}
+  const qs=shuffle(ids).slice(0,10).map(id=>S.mist[id]===1?QMAP[id]:S.mist[id]).filter(Boolean);runQs({title:'Fehlerheft',qs,hearts:null,color:'#ff9600',kind:'mist'});}
+function startRandom(){runQs({title:'Zufalls-Training',qs:shuffle(allQs()).slice(0,10),hearts:3,color:'#1cb0f6',kind:'rand'});}
+function startBlitz(){
+  const pool=shuffle(allQs().filter(q=>q.t==='tf'||q.t==='mc'));let idx=0,score=0,left=60,combo=0,lock=false;
+  const draw=()=>{const q=pool[idx%pool.length];const v=q.t==='tf'?{o:['Richtig','Falsch'],ok:q.a?0:1}:(()=>{const o=shuffle(q.o.map((t,i)=>({t,ok:i===0})));return{o:o.map(x=>x.t),ok:o.findIndex(x=>x.ok)};})();
+    R.cq={q,v};
+    openOv(`<div class="run-top"><button class="x" onclick="closeOv()">✕</button><div class="bar"><i id="bt" style="width:${left/60*100}%;background:var(--blue)"></i></div><span class="tm" id="bts">${left}</span></div><div class="run-body"><div class="run-type">⚡ Blitz · Punkte: <span id="bsc">${score}</span>${combo>=3?' · 🔥 ×'+combo:''}</div><div class="run-q">${esc(q.q)}</div>${v.o.map((t,i)=>`<button class="opt" data-i="${i}">${esc(t)}</button>`).join('')}</div>`);
+    document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{if(lock)return;lock=true;const i=+b.dataset.i,ok=i===v.ok;document.querySelectorAll('.opt').forEach((x,k)=>x.classList.add(k===v.ok?'ok':(k===i?'bad':'dim')));
+      if(ok){score++;combo++;sfx('ok');}else{combo=0;left=Math.max(0,left-5);sfx('bad');S.mist[q.id]=1;save();}
+      setTimeout(()=>{lock=false;idx++;if(R&&left>0)draw();},ok?350:900);});};
+  R={kind:'blitz',color:'#1cb0f6'};R.timer=setInterval(()=>{left--;const t=$('#bts');if(t){t.textContent=Math.max(0,left);$('#bt').style.width=Math.max(0,left/60*100)+'%';}if(left<=0){clearInterval(R.timer);endBlitz(score);}},1000);
+  draw();}
+function endBlitz(score){const best=score>S.stats.blitzBest;S.stats.blitzBest=Math.max(S.stats.blitzBest,score);const xp=score*3;if(xp)addXp(xp);save();confetti();sfx('win');
+  const o=ov();openOv(`<div class="run-body"><div class="res"><div class="big">⚡</div><h2>${best?'Neuer Rekord!':'Zeit abgelaufen'}</h2><div class="stats"><div class="stat"><small>Punkte</small><b>${score}</b></div><div class="stat"><small>XP</small><b style="color:var(--gold)">+${xp}</b></div><div class="stat"><small>Rekord</small><b>${S.stats.blitzBest}</b></div></div></div></div><div class="run-foot"><div class="in row"><button class="btn green" style="flex:1" onclick="closeOv()">Weiter</button><button class="btn blue" onclick="R=null;startBlitz()">Nochmal</button></div></div>`);}
+
+/* ============ PROFIL ============ */
+function vProfile(m){
+  const ri_=rankIdx(S.xp),r=RANKS[ri_],nx=RANKS[ri_+1],pr=nx?Math.round((S.xp-r[0])/(nx[0]-r[0])*100):100;
+  const acc=S.stats.answers?Math.round(S.stats.correct/S.stats.answers*100):0;
+  m.innerHTML=`<div class="hero"><div class="mascot">${r[2]}</div><div style="flex:1"><h2>${esc(S.name)} · ${r[1]}</h2><div class="muted">${S.xp} XP${nx?' · noch '+(nx[0]-S.xp)+' bis '+nx[2]+' '+nx[1]:' · höchster Rang!'}</div><div class="bar mt"><i style="width:${pr}%;background:var(--gold)"></i></div></div></div>
+  <div class="stats"><div class="stat"><small>Serie</small><b>🔥 ${S.streak}</b></div><div class="stat"><small>Lektionen</small><b>${doneLessons()}/${totalLessons()}</b></div><div class="stat"><small>Trefferquote</small><b>${acc}%</b></div><div class="stat"><small>Heute</small><b>${S.dayXp[dkey()]||0}/${DAILY}</b></div></div>
+  <h2 class="sec">🏅 Abzeichen (${Object.keys(S.badges).length}/${BADGES.length})</h2><div class="badges">${BADGES.map(b=>`<div class="badge ${S.badges[b.id]?'':'lock'}"><span class="bi">${b.i}</span><b>${b.n}</b><br><span class="muted">${b.d}</span></div>`).join('')}</div>
+  <h2 class="sec">⚙️ Einstellungen</h2><div class="card"><label class="muted">Name</label><input class="txt" value="${esc(S.name)}" onchange="S.name=this.value.trim()||'Eric';save();render()"><label class="muted">Klausurtermin</label><input class="txt" type="date" value="${S.exam}" onchange="S.exam=this.value||nextMonday();save();render()"><div class="row"><button class="btn ghost sm" onclick="S.sound=!S.sound;save();render()">${S.sound?'🔊 Ton an':'🔇 Ton aus'}</button><button class="btn ghost sm" onclick="exportProg()">📤 Fortschritt sichern</button><button class="btn ghost sm" onclick="importProg()">📥 Wiederherstellen</button><button class="btn red sm" onclick="resetAll()">Zurücksetzen</button></div></div>
+  <p class="muted" style="text-align:center;font-size:.8rem">Lernhilfe auf Basis der Vorlesungsunterlagen (Kremers „Anlageprodukte“, Tietz „Anlageberatung 2“, Gruppenarbeit 10, DDV Kompass Strukturierte Produkte). Keine Anlageberatung.</p>`;}
+function exportProg(){const s=btoa(unescape(encodeURIComponent(JSON.stringify(S))));showSheet(`<h3>📤 Fortschritt sichern</h3><p class="muted">Diesen Code kopieren und auf einem anderen Gerät unter „Wiederherstellen“ einfügen.</p><textarea class="txt" id="exp" rows="5" style="width:100%" readonly>${s}</textarea><button class="btn green full mt" onclick="copyExp()">Kopieren</button>`);}
+function copyExp(){const t=$('#exp');t.focus();t.select();t.setSelectionRange(0,t.value.length);const ok=()=>toast('Kopiert!');if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t.value).then(ok,()=>{document.execCommand('copy');ok();});}else{try{document.execCommand('copy');ok();}catch(e){toast('Bitte Text manuell kopieren');}}}
+function importProg(){showSheet(`<h3>📥 Wiederherstellen</h3><textarea class="txt" id="imp" rows="5" style="width:100%" placeholder="Code hier einfügen"></textarea><button class="btn green full mt" onclick="doImport()">Laden</button>`);}
+function doImport(){try{const o=JSON.parse(decodeURIComponent(escape(atob($('#imp').value.trim()))));S=Object.assign(defState(),o);save();closeSheet();render();toast('Fortschritt geladen ✔');}catch(e){toast('Code ungültig');}}
+function resetAll(){if(confirm('Wirklich ALLEN Fortschritt löschen?')){S=defState();save();render();}}
+
+/* ============ START ============ */
+document.addEventListener('keydown',e=>{
+  if(ov().classList.contains('hidden')||!R||R.kind==='flash'||R.kind==='blitz')return;
+  if(e.key==='Enter'){const n=$('#nxt');if(n){n.click();return;}const c=$('#chk');if(c&&!c.disabled){c.click();}}
+  else if(/^[1-9]$/.test(e.key)&&!R.locked&&document.activeElement.tagName!=='INPUT'){const b=document.querySelectorAll('#qbody .opt')[+e.key-1];if(b)b.click();}
+});
+// Home-Bildschirm-Symbol für iOS (PNG, per Canvas erzeugt)
+function setTouchIcon(){try{const c=document.createElement('canvas');c.width=c.height=180;const x=c.getContext('2d');x.fillStyle='#131f24';x.fillRect(0,0,180,180);x.font='110px serif';x.textAlign='center';x.textBaseline='middle';x.fillText('🐂',90,98);const l=document.createElement('link');l.rel='apple-touch-icon';l.href=c.toDataURL('image/png');document.head.appendChild(l);}catch(e){}}
+function boot(){
+  setTouchIcon();
+  render();
+  if(!S.intro){S.intro=true;save();showSheet(`<h3>🐂 Willkommen bei Bulle &amp; Bär!</h3><p>Dein Trainer für <b>Anlageprodukte &amp; Anlageberatung</b>: Lernpfad mit ${totalLessons()} Lektionen, Karteikarten, Rechen-Lab, Payoff-Studio, Beratungsfällen und Klausur-Simulator. Sammle XP, halte deine Serie und werde Vorstand!</p><label class="muted">Wie heißt du?</label><input class="txt" id="nm" value="${esc(S.name)}"><button class="btn green full" onclick="S.name=$('#nm').value.trim()||'Eric';save();closeSheet();render()">Los geht’s!</button>`);}
+  setInterval(renderHud,60000);
+}
+boot();
+</script>
+</body>
+</html>
